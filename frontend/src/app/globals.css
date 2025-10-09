@@ -1,0 +1,282 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Clothing Store Billing System Design Tokens */
+
+@layer base {
+    :root {
+        /* Warm professional palette for clothing store */
+        --background: 250 20% 99%;
+        --foreground: 220 13% 13%;
+
+        --card: 0 0% 100%;
+        --card-foreground: 220 13% 13%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 220 13% 13%;
+
+        /* Rich navy blue for primary elements */
+        --primary: 220 25% 20%;
+        --primary-foreground: 210 40% 98%;
+        --primary-glow: 220 25% 35%;
+
+        /* Warm secondary tones */
+        --secondary: 45 100% 96%;
+        --secondary-foreground: 220 25% 20%;
+
+        --muted: 220 13% 95%;
+        --muted-foreground: 220 13% 45%;
+
+        /* Golden accent for premium feel */
+        --accent: 38 92% 50%;
+        --accent-foreground: 220 25% 20%;
+        --accent-glow: 45 100% 70%;
+
+        /* Success green for completed orders */
+        --success: 142 76% 36%;
+        --success-foreground: 355 20% 98%;
+
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 220 13% 88%;
+        --input: 220 13% 88%;
+        --ring: 220 25% 20%;
+
+        /* Fabric & textile inspired gradients */
+        --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+        --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--accent-glow)));
+        --gradient-fabric: linear-gradient(45deg, hsl(220 25% 20%), hsl(220 13% 35%));
+
+        /* Professional shadows */
+        --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.15);
+        --shadow-fabric: 0 4px 20px -4px hsl(var(--accent) / 0.25);
+
+        /* Smooth transitions */
+        --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        --radius: 0.75rem;
+
+        --sidebar-background: 0 0% 98%;
+
+        --sidebar-foreground: 240 5.3% 26.1%;
+
+        --sidebar-primary: 240 5.9% 10%;
+
+        --sidebar-primary-foreground: 0 0% 98%;
+
+        --sidebar-accent: 240 4.8% 95.9%;
+
+        --sidebar-accent-foreground: 240 5.9% 10%;
+
+        --sidebar-border: 220 13% 91%;
+
+        --sidebar-ring: 217.2 91.2% 59.8%;
+    }
+
+    .dark {
+        --background: 222.2 84% 4.9%;
+        --foreground: 210 40% 98%;
+        --card: 222.2 84% 4.9%;
+        --card-foreground: 210 40% 98%;
+        --popover: 222.2 84% 4.9%;
+        --popover-foreground: 210 40% 98%;
+        --primary: 210 40% 98%;
+        --primary-foreground: 222.2 47.4% 11.2%;
+        --secondary: 217.2 32.6% 17.5%;
+        --secondary-foreground: 210 40% 98%;
+        --muted: 217.2 32.6% 17.5%;
+        --muted-foreground: 215 20.2% 65.1%;
+        --accent: 217.2 32.6% 17.5%;
+        --accent-foreground: 210 40% 98%;
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 210 40% 98%;
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+        --ring: 212.7 26.8% 83.9%;
+        --sidebar-background: 240 5.9% 10%;
+        --sidebar-foreground: 240 4.8% 95.9%;
+        --sidebar-primary: 224.3 76.3% 48%;
+        --sidebar-primary-foreground: 0 0% 100%;
+        --sidebar-accent: 240 3.7% 15.9%;
+        --sidebar-accent-foreground: 240 4.8% 95.9%;
+        --sidebar-border: 240 3.7% 15.9%;
+        --sidebar-ring: 217.2 91.2% 59.8%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground font-sans;
+    }
+}
+
+/* Professional POS interface styles */
+@layer components {
+    .pos-card {
+        @apply bg-card border border-border rounded-lg shadow-[var(--shadow-elegant)] transition-[var(--transition-smooth)];
+    }
+
+    .fabric-gradient {
+        background: var(--gradient-fabric);
+    }
+
+    .accent-gradient {
+        background: var(--gradient-accent);
+    }
+
+    .primary-gradient {
+        background: var(--gradient-primary);
+    }
+
+    .fabric-shadow {
+        box-shadow: var(--shadow-fabric);
+    }
+
+    .elegant-shadow {
+        box-shadow: var(--shadow-elegant);
+    }
+
+    /* Barcode styling */
+    .barcode-container {
+        @apply bg-card border-2 border-dashed border-muted-foreground/30 rounded-lg p-4 text-center;
+    }
+
+    /* Invoice print styles */
+    @media print {
+        .no-print {
+            display: none !important;
+        }
+
+        .invoice-container {
+            @apply shadow-none border-none bg-white text-black;
+        }
+
+        .page-break {
+            page-break-after: always;
+        }
+    }
+
+    /* Thermal receipt styles (58mm width) */
+    .thermal-receipt {
+        width: 58mm;
+        @apply text-xs font-mono bg-white text-black p-2;
+    }
+
+    .thermal-receipt * {
+        @apply text-black;
+    }
+
+    /* Custom styles for the clothing store */
+    .clothing-store-gradient {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .print-friendly {
+        @apply bg-white text-black;
+    }
+
+    .print-friendly * {
+        @apply text-black;
+    }
+
+    /* Barcode styles */
+    .barcode-label {
+        @apply text-xs text-center mt-2 font-mono;
+    }
+
+    /* Invoice styles */
+    .invoice-container {
+        @apply max-w-4xl mx-auto bg-white p-8 shadow-lg;
+    }
+
+    .invoice-header {
+        @apply border-b-2 border-gray-300 pb-4 mb-6;
+    }
+
+    .invoice-items {
+        @apply w-full border-collapse;
+    }
+
+    .invoice-items th,
+    .invoice-items td {
+        @apply border border-gray-300 px-4 py-2 text-left;
+    }
+
+    .invoice-items th {
+        @apply bg-gray-100 font-semibold;
+    }
+
+    .invoice-total {
+        @apply border-t-2 border-gray-300 pt-4 mt-4;
+    }
+
+    /* Loading animations */
+    .loading-spinner {
+        @apply animate-spin rounded-full h-8 w-8 border-b-2 border-primary;
+    }
+
+    .loading-dots::after {
+        content: '';
+        animation: dots 1.5s steps(5, end) infinite;
+    }
+
+    @keyframes dots {
+
+        0%,
+        20% {
+            content: '';
+        }
+
+        40% {
+            content: '.';
+        }
+
+        60% {
+            content: '..';
+        }
+
+        80%,
+        100% {
+            content: '...';
+        }
+    }
+
+    /* Responsive table */
+    .table-responsive {
+        @apply overflow-x-auto;
+    }
+
+    .table-responsive table {
+        @apply min-w-full;
+    }
+
+    /* Custom scrollbar */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        @apply bg-gray-100 rounded;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        @apply bg-gray-300 rounded;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        @apply bg-gray-400;
+    }
+
+    /* Print styles */
+    @media print {
+        .print-break {
+            page-break-before: always;
+        }
+    }
+}

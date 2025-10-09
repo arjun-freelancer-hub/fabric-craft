@@ -1,0 +1,1 @@
+{"version":3,"file":"InventoryRoutes.d.ts","sourceRoot":"","sources":["../../src/routes/InventoryRoutes.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,SAAS,CAAC;AAMjC,qBAAa,eAAe;IAC1B,OAAO,CAAC,MAAM,CAAS;IACvB,OAAO,CAAC,mBAAmB,CAAsB;;IAQjD,OAAO,CAAC,gBAAgB;IAmDjB,SAAS,IAAI,MAAM;CAG3B"}

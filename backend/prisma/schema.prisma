@@ -1,0 +1,389 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.0.x", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Organization/Workspace Management
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  ownerId     String   // The user who owns this organization
+
+  // Relations
+  owner            User                 @relation("OrganizationOwner", fields: [ownerId], references: [id])
+  members          OrganizationMember[]
+  invitations      Invitation[]
+  bills            Bill[]
+  products         Product[]
+  customers        Customer[]
+  categories       Category[]
+
+  @@map("organizations")
+}
+
+// User Management
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  firstName String
+  lastName  String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  ownedOrganizations    Organization[]       @relation("OrganizationOwner")
+  organizationMembers   OrganizationMember[]
+  sentInvitations       Invitation[]         @relation("InvitationSender")
+  createdBills          Bill[]
+  createdProducts       Product[]
+  createdCustomers      Customer[]
+
+  @@map("users")
+}
+
+// Organization Members with Roles
+model OrganizationMember {
+  id             String         @id @default(cuid())
+  organizationId String
+  userId         String
+  role           MemberRole     @default(MEMBER)
+  isActive       Boolean        @default(true)
+  joinedAt       DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  // Relations
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@map("organization_members")
+}
+
+enum MemberRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+// Customer Management
+model Customer {
+  id             String   @id @default(cuid())
+  organizationId String
+  firstName      String
+  lastName       String
+  email          String?
+  phone          String?
+  address        String?
+  city           String?
+  state          String?
+  pincode        String?
+  dateOfBirth    DateTime?
+  gender         Gender?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  createdBy      String
+
+  // Relations
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  creator        User           @relation(fields: [createdBy], references: [id])
+  bills          Bill[]
+  measurements   CustomerMeasurement[]
+
+  @@map("customers")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+// Customer Measurements
+model CustomerMeasurement {
+  id         String   @id @default(cuid())
+  customerId String
+  name       String   // Template name (e.g., "Shirt Template", "Pant Template")
+  measurements Json   // Store measurements as JSON
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@map("customer_measurements")
+}
+
+// Product Categories
+model Category {
+  id             String       @id @default(cuid())
+  organizationId String
+  name           String
+  description    String?
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  // Relations
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  products       Product[]
+
+  @@unique([organizationId, name])
+  @@map("categories")
+}
+
+// Products
+model Product {
+  id              String        @id @default(cuid())
+  organizationId  String
+  name            String
+  description     String?
+  sku             String
+  barcode         String?
+  categoryId      String
+  type            ProductType
+  unit            String        // meter, piece, kg, etc.
+  basePrice       Decimal       @db.Decimal(10, 2)
+  sellingPrice    Decimal       @db.Decimal(10, 2)
+  costPrice       Decimal       @db.Decimal(10, 2)
+  minStock        Int           @default(0)
+  maxStock        Int?
+  isActive        Boolean       @default(true)
+  isTailoring     Boolean       @default(false)
+  tailoringPrice  Decimal?      @db.Decimal(10, 2)
+  imageUrl        String?
+  specifications  Json?         // Store product specifications
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  createdBy       String
+
+  // Relations
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  category        Category      @relation(fields: [categoryId], references: [id])
+  creator         User          @relation(fields: [createdBy], references: [id])
+  inventory       Inventory[]
+  billItems       BillItem[]
+
+  @@unique([organizationId, sku])
+  @@unique([organizationId, barcode])
+  @@map("products")
+}
+
+enum ProductType {
+  FABRIC
+  READY_MADE
+  ACCESSORY
+  TAILORING_SERVICE
+  CUSTOM
+}
+
+// Inventory Management
+model Inventory {
+  id          String      @id @default(cuid())
+  productId   String
+  quantity    Int
+  type        InventoryType
+  reference   String?     // Reference to bill, purchase, etc.
+  notes       String?
+  createdAt   DateTime    @default(now())
+  createdBy   String
+
+  // Relations
+  product     Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("inventory")
+}
+
+enum InventoryType {
+  IN
+  OUT
+  ADJUSTMENT
+  RETURN
+}
+
+// Bills and Orders
+model Bill {
+  id              String        @id @default(cuid())
+  organizationId  String
+  billNumber      String
+  customerId      String?
+  totalAmount     Decimal       @db.Decimal(10, 2)
+  discountAmount  Decimal       @default(0) @db.Decimal(10, 2)
+  taxAmount       Decimal       @default(0) @db.Decimal(10, 2)
+  finalAmount     Decimal       @db.Decimal(10, 2)
+  paymentMethod   PaymentMethod
+  paymentStatus   PaymentStatus @default(PENDING)
+  status          BillStatus    @default(ACTIVE)
+  notes           String?
+  deliveryDate    DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  createdBy       String
+
+  // Relations
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer        Customer?     @relation(fields: [customerId], references: [id])
+  creator         User          @relation(fields: [createdBy], references: [id])
+  items           BillItem[]
+  payments        Payment[]
+
+  @@unique([organizationId, billNumber])
+  @@map("bills")
+}
+
+enum PaymentMethod {
+  CASH
+  UPI
+  CARD
+  NETBANKING
+  WALLET
+  CHEQUE
+}
+
+enum PaymentStatus {
+  PENDING
+  PARTIAL
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum BillStatus {
+  DRAFT
+  ACTIVE
+  CANCELLED
+  RETURNED
+}
+
+// Bill Items
+model BillItem {
+  id              String   @id @default(cuid())
+  billId          String
+  productId       String?
+  customName      String?  // For custom products
+  description     String?
+  quantity        Decimal  @db.Decimal(10, 3)
+  unit            String
+  unitPrice       Decimal  @db.Decimal(10, 2)
+  totalPrice      Decimal  @db.Decimal(10, 2)
+  discount        Decimal  @default(0) @db.Decimal(10, 2)
+  isTailoring     Boolean  @default(false)
+  tailoringPrice  Decimal? @db.Decimal(10, 2)
+  measurements    Json?    // Store measurements for tailoring
+  notes           String?
+  createdAt       DateTime @default(now())
+
+  // Relations
+  bill            Bill     @relation(fields: [billId], references: [id], onDelete: Cascade)
+  product         Product? @relation(fields: [productId], references: [id])
+
+  @@map("bill_items")
+}
+
+// Payments
+model Payment {
+  id              String        @id @default(cuid())
+  billId          String
+  amount          Decimal       @db.Decimal(10, 2)
+  method          PaymentMethod
+  reference       String?       // Transaction reference
+  status          PaymentStatus @default(PENDING)
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Relations
+  bill            Bill          @relation(fields: [billId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+// System Settings
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  type      String   @default("string") // string, number, boolean, json
+  category  String   @default("general")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}
+
+// Audit Log
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  action    String
+  entity    String
+  entityId  String?
+  oldData   Json?
+  newData   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+// User Invitations
+model Invitation {
+  id             String           @id @default(cuid())
+  organizationId String
+  email          String
+  role           MemberRole       @default(MEMBER)
+  token          String           @unique
+  status         InvitationStatus @default(PENDING)
+  expiresAt      DateTime
+  sentBy         String
+  acceptedAt     DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  // Relations
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  sender         User             @relation("InvitationSender", fields: [sentBy], references: [id])
+
+  @@index([email])
+  @@index([token])
+  @@index([organizationId])
+  @@map("invitations")
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  CANCELLED
+}
+
+// Password Reset Tokens
+model PasswordReset {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([token])
+  @@map("password_resets")
+}
