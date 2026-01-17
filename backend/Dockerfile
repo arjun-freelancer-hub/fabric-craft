@@ -71,6 +71,10 @@ COPY --from=builder /app/tsconfig.json ./tsconfig.json
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
+# Copy seed helper script
+COPY seed-helper.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/seed-helper.sh
+
 # Create directories for uploads and logs
 RUN mkdir -p uploads logs
 

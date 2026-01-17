@@ -4066,3 +4066,173 @@ The database is already in sync with the Prisma schema.
 [2026-01-17T11:29:56.080Z] [INFO] ::1 - - [17/Jan/2026:11:29:56 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
 [2026-01-17T11:30:11.527Z] [INFO] Database disconnected successfully
 [2026-01-17T11:30:11.530Z] [INFO] Server stopped gracefully
+[2026-01-17T11:32:02.892Z] [INFO] Checking database existence...
+[2026-01-17T11:32:03.004Z] [INFO] ✅ Database 'clothing_store' already exists.
+[2026-01-17T11:32:03.006Z] [INFO] 🔄 Running database migrations...
+[2026-01-17T11:32:05.101Z] [INFO] Prisma schema loaded from prisma/schema.prisma
+Datasource "db": MySQL database "clothing_store" at "mysql:3306"
+
+The database is already in sync with the Prisma schema.
+[2026-01-17T11:32:05.111Z] [WARN] ┌─────────────────────────────────────────────────────────┐
+│  Update available 5.22.0 -> 7.2.0                       │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+[2026-01-17T11:32:05.123Z] [INFO] ✅ Database schema synchronized successfully!
+[2026-01-17T11:32:05.151Z] [INFO] ✅ Database connected successfully
+[2026-01-17T11:32:05.163Z] [INFO] Database connected successfully
+[2026-01-17T11:32:05.179Z] [INFO] Initializing routes...
+[2026-01-17T11:32:05.212Z] [INFO] Email service initialized successfully
+[2026-01-17T11:32:05.233Z] [INFO] Email service initialized successfully
+[2026-01-17T11:32:05.305Z] [INFO] Routes initialized successfully
+[2026-01-17T11:32:05.309Z] [INFO] 🚀 Backend server running on port 5000
+[2026-01-17T11:32:05.323Z] [INFO] 📊 Health check: http://localhost:5000/health
+[2026-01-17T11:32:05.337Z] [INFO] 🔗 API base URL: http://localhost:5000/api
+[2026-01-17T11:32:05.353Z] [INFO] 🌍 Environment: production
+[2026-01-17T11:32:05.913Z] [INFO] ::1 - - [17/Jan/2026:11:32:05 +0000] "GET /health HTTP/1.1" 200 102 "-" "-"
+[2026-01-17T11:32:36.191Z] [INFO] ::1 - - [17/Jan/2026:11:32:36 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T11:33:06.448Z] [INFO] ::1 - - [17/Jan/2026:11:33:06 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T11:33:36.665Z] [INFO] ::1 - - [17/Jan/2026:11:33:36 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T11:34:06.861Z] [INFO] ::1 - - [17/Jan/2026:11:34:06 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:34:37.097Z] [INFO] ::1 - - [17/Jan/2026:11:34:37 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:35:07.334Z] [INFO] ::1 - - [17/Jan/2026:11:35:07 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:35:37.584Z] [INFO] ::1 - - [17/Jan/2026:11:35:37 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:36:07.766Z] [INFO] ::1 - - [17/Jan/2026:11:36:07 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:36:37.944Z] [INFO] ::1 - - [17/Jan/2026:11:36:37 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:37:08.115Z] [INFO] ::1 - - [17/Jan/2026:11:37:08 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:37:38.284Z] [INFO] ::1 - - [17/Jan/2026:11:37:38 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:38:08.452Z] [INFO] ::1 - - [17/Jan/2026:11:38:08 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:38:38.631Z] [INFO] ::1 - - [17/Jan/2026:11:38:38 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:39:08.809Z] [INFO] ::1 - - [17/Jan/2026:11:39:08 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:39:38.975Z] [INFO] ::1 - - [17/Jan/2026:11:39:38 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:40:09.139Z] [INFO] ::1 - - [17/Jan/2026:11:40:09 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T11:40:39.330Z] [INFO] ::1 - - [17/Jan/2026:11:40:39 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:41:09.511Z] [INFO] ::1 - - [17/Jan/2026:11:41:09 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:41:39.677Z] [INFO] ::1 - - [17/Jan/2026:11:41:39 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:42:09.849Z] [INFO] ::1 - - [17/Jan/2026:11:42:09 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:42:40.036Z] [INFO] ::1 - - [17/Jan/2026:11:42:40 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:43:10.219Z] [INFO] ::1 - - [17/Jan/2026:11:43:10 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:43:40.381Z] [INFO] ::1 - - [17/Jan/2026:11:43:40 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:44:10.557Z] [INFO] ::1 - - [17/Jan/2026:11:44:10 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:44:40.786Z] [INFO] ::1 - - [17/Jan/2026:11:44:40 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:45:11.049Z] [INFO] ::1 - - [17/Jan/2026:11:45:11 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:45:41.229Z] [INFO] ::1 - - [17/Jan/2026:11:45:41 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:46:11.409Z] [INFO] ::1 - - [17/Jan/2026:11:46:11 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T11:46:41.585Z] [INFO] ::1 - - [17/Jan/2026:11:46:41 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:47:11.742Z] [INFO] ::1 - - [17/Jan/2026:11:47:11 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T11:47:41.924Z] [INFO] ::1 - - [17/Jan/2026:11:47:41 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:48:12.106Z] [INFO] ::1 - - [17/Jan/2026:11:48:12 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:48:42.280Z] [INFO] ::1 - - [17/Jan/2026:11:48:42 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:49:12.575Z] [INFO] ::1 - - [17/Jan/2026:11:49:12 +0000] "GET /health HTTP/1.1" 200 105 "-" "-"
+[2026-01-17T11:49:33.518Z] [INFO] Database disconnected successfully
+[2026-01-17T11:49:33.522Z] [INFO] Server stopped gracefully
+[2026-01-17T11:49:59.834Z] [INFO] Checking database existence...
+[2026-01-17T11:49:59.912Z] [INFO] ✅ Database 'clothing_store' already exists.
+[2026-01-17T11:49:59.923Z] [INFO] 🔄 Running database migrations...
+[2026-01-17T11:50:01.858Z] [INFO] Prisma schema loaded from prisma/schema.prisma
+Datasource "db": MySQL database "clothing_store" at "mysql:3306"
+
+The database is already in sync with the Prisma schema.
+[2026-01-17T11:50:01.861Z] [WARN] ┌─────────────────────────────────────────────────────────┐
+│  Update available 5.22.0 -> 7.2.0                       │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+[2026-01-17T11:50:01.888Z] [INFO] ✅ Database schema synchronized successfully!
+[2026-01-17T11:50:01.913Z] [INFO] ✅ Database connected successfully
+[2026-01-17T11:50:01.928Z] [INFO] Database connected successfully
+[2026-01-17T11:50:01.943Z] [INFO] Initializing routes...
+[2026-01-17T11:50:01.966Z] [INFO] Email service initialized successfully
+[2026-01-17T11:50:01.992Z] [INFO] Email service initialized successfully
+[2026-01-17T11:50:02.058Z] [INFO] Routes initialized successfully
+[2026-01-17T11:50:02.062Z] [INFO] 🚀 Backend server running on port 5000
+[2026-01-17T11:50:02.073Z] [INFO] 📊 Health check: http://localhost:5000/health
+[2026-01-17T11:50:02.092Z] [INFO] 🔗 API base URL: http://localhost:5000/api
+[2026-01-17T11:50:02.111Z] [INFO] 🌍 Environment: production
+[2026-01-17T11:50:02.558Z] [INFO] ::1 - - [17/Jan/2026:11:50:02 +0000] "GET /health HTTP/1.1" 200 102 "-" "-"
+[2026-01-17T11:50:32.746Z] [INFO] ::1 - - [17/Jan/2026:11:50:32 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T11:51:02.995Z] [INFO] ::1 - - [17/Jan/2026:11:51:02 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T11:51:33.228Z] [INFO] ::1 - - [17/Jan/2026:11:51:33 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T11:52:03.498Z] [INFO] ::1 - - [17/Jan/2026:11:52:03 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:52:33.698Z] [INFO] ::1 - - [17/Jan/2026:11:52:33 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:52:46.794Z] [INFO] Database disconnected successfully
+[2026-01-17T11:52:46.845Z] [INFO] Server stopped gracefully
+[2026-01-17T11:53:13.675Z] [INFO] Checking database existence...
+[2026-01-17T11:53:13.777Z] [INFO] ✅ Database 'clothing_store' already exists.
+[2026-01-17T11:53:13.780Z] [INFO] 🔄 Running database migrations...
+[2026-01-17T11:53:15.907Z] [INFO] Prisma schema loaded from prisma/schema.prisma
+Datasource "db": MySQL database "clothing_store" at "mysql:3306"
+
+The database is already in sync with the Prisma schema.
+[2026-01-17T11:53:15.912Z] [WARN] ┌─────────────────────────────────────────────────────────┐
+│  Update available 5.22.0 -> 7.2.0                       │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+[2026-01-17T11:53:15.935Z] [INFO] ✅ Database schema synchronized successfully!
+[2026-01-17T11:53:15.961Z] [INFO] ✅ Database connected successfully
+[2026-01-17T11:53:15.982Z] [INFO] Database connected successfully
+[2026-01-17T11:53:16.005Z] [INFO] Initializing routes...
+[2026-01-17T11:53:16.032Z] [INFO] Email service initialized successfully
+[2026-01-17T11:53:16.063Z] [INFO] Email service initialized successfully
+[2026-01-17T11:53:16.141Z] [INFO] Routes initialized successfully
+[2026-01-17T11:53:16.146Z] [INFO] 🚀 Backend server running on port 5000
+[2026-01-17T11:53:16.162Z] [INFO] 📊 Health check: http://localhost:5000/health
+[2026-01-17T11:53:16.178Z] [INFO] 🔗 API base URL: http://localhost:5000/api
+[2026-01-17T11:53:16.195Z] [INFO] 🌍 Environment: production
+[2026-01-17T11:53:16.666Z] [INFO] ::1 - - [17/Jan/2026:11:53:16 +0000] "GET /health HTTP/1.1" 200 102 "-" "-"
+[2026-01-17T11:53:46.869Z] [INFO] ::1 - - [17/Jan/2026:11:53:46 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T11:54:17.105Z] [INFO] ::1 - - [17/Jan/2026:11:54:17 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T11:54:47.316Z] [INFO] ::1 - - [17/Jan/2026:11:54:47 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T11:54:52.805Z] [INFO] User logged in successfully {
+  "userId": "cmki92b7r0000qug3ick7qgwk",
+  "email": "admin@fabriccraft.com",
+  "workspaceCount": 1
+}
+[2026-01-17T11:54:52.809Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:54:52 +0000] "POST /api/auth/login HTTP/1.1" 200 849 "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:54:53.141Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:54:53 +0000] "GET /api/workspaces HTTP/1.1" 200 221 "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:54:53.176Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:54:53 +0000] "GET /api/workspaces HTTP/1.1" 304 - "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:54:53.191Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:54:53 +0000] "GET /api/products?limit=100 HTTP/1.1" 200 - "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:54:59.697Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:54:59 +0000] "GET /api/products?limit=100 HTTP/1.1" 304 - "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:55:00.221Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:55:00 +0000] "GET /api/customers?limit=100 HTTP/1.1" 200 927 "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:55:01.105Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:55:01 +0000] "GET /api/products?limit=100 HTTP/1.1" 304 - "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:55:02.118Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:55:02 +0000] "GET /api/bills?limit=50 HTTP/1.1" 200 91 "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:55:02.822Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:55:02 +0000] "GET /api/workspaces/cmki92b9e0002qug3f4r1jmum/members HTTP/1.1" 200 760 "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:55:02.843Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:55:02 +0000] "GET /api/workspaces/cmki92b9e0002qug3f4r1jmum/invitations HTTP/1.1" 200 42 "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:55:03.387Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:55:03 +0000] "GET /api/settings/whatsapp HTTP/1.1" 200 69 "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:55:03.396Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:55:03 +0000] "GET /api/settings/business/info HTTP/1.1" 200 183 "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:55:05.169Z] [INFO] User logged out {
+  "userId": "cmki92b7r0000qug3ick7qgwk",
+  "ip": "::ffff:172.18.0.1"
+}
+[2026-01-17T11:55:05.172Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:55:05 +0000] "POST /api/auth/logout HTTP/1.1" 200 46 "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:55:17.512Z] [INFO] ::1 - - [17/Jan/2026:11:55:17 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T11:55:21.367Z] [INFO] User logged in successfully {
+  "userId": "cmki92bcq0003qug3ggx5vt0d",
+  "email": "staff@fabriccraft.com",
+  "workspaceCount": 2
+}
+[2026-01-17T11:55:21.372Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:55:21 +0000] "POST /api/auth/login HTTP/1.1" 200 - "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:55:21.471Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:55:21 +0000] "GET /api/workspaces HTTP/1.1" 200 403 "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:55:21.506Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:55:21 +0000] "GET /api/workspaces HTTP/1.1" 304 - "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:55:21.526Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:55:21 +0000] "GET /api/products?limit=100 HTTP/1.1" 304 - "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"
+[2026-01-17T11:55:28.829Z] [INFO] User logged out {
+  "userId": "cmki92bcq0003qug3ggx5vt0d",
+  "ip": "::ffff:172.18.0.1"
+}
+[2026-01-17T11:55:28.833Z] [INFO] ::ffff:172.18.0.1 - - [17/Jan/2026:11:55:28 +0000] "POST /api/auth/logout HTTP/1.1" 200 46 "http://localhost:3001/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36"

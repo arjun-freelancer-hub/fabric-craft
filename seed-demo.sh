@@ -10,8 +10,9 @@ if ! docker-compose ps | grep -q "fabric-craft-backend.*Up"; then
     exit 1
 fi
 
-# Run the seed command in the backend container using ts-node
-docker-compose exec -T backend npx ts-node -r tsconfig-paths/register prisma/seed.ts
+# Run the seed command using the helper script which constructs DATABASE_URL correctly
+# The helper script ensures DATABASE_URL uses the Docker service name (mysql) instead of localhost
+docker-compose exec -T backend /usr/local/bin/seed-helper.sh
 
 if [ $? -eq 0 ]; then
     echo ""
