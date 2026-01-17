@@ -1,5 +1,3 @@
-import Cookies from 'js-cookie';
-
 const AUTH_TOKEN_KEY = 'authToken';
 const USER_DATA_KEY = 'userData';
 
@@ -19,12 +17,16 @@ export interface AuthState {
   token: string | null;
 }
 
-// Cookie options for security
-const cookieOptions = {
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'strict' as const,
-  expires: 7, // 7 days
-};
+// Helper function to get cookie value by name (client-side only)
+function getCookie(name: string): string | null {
+  if (typeof window === 'undefined') return null;
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    return parts.pop()?.split(';').shift() || null;
+  }
+  return null;
+}
 
 // Server-side cookie utilities using Next.js cookies API
 // These functions are safe to use in server components and middleware
@@ -77,31 +79,28 @@ export const serverAuthUtils = {
 };
 
 export const authUtils = {
-  // Set authentication token and user data
-  setAuth: (token: string, user: User) => {
-    Cookies.set(AUTH_TOKEN_KEY, token, cookieOptions);
-    Cookies.set(USER_DATA_KEY, JSON.stringify(user), cookieOptions);
-  },
+  // Note: setAuth() removed - cookies are now set server-side via route handlers
+  // Use the login route handler at /api/auth/login to set cookies
 
-  // Get authentication token
+  // Get authentication token (client-side only)
   getToken: (): string | null => {
     if (typeof window === 'undefined') return null;
-    return Cookies.get(AUTH_TOKEN_KEY) || null;
+    return getCookie(AUTH_TOKEN_KEY);
   },
 
-  // Get user data
+  // Get user data (client-side only)
   getUser: (): User | null => {
     if (typeof window === 'undefined') return null;
-    const userData = Cookies.get(USER_DATA_KEY);
+    const userData = getCookie(USER_DATA_KEY);
     if (!userData) return null;
     try {
-      return JSON.parse(userData);
+      return JSON.parse(decodeURIComponent(userData));
     } catch {
       return null;
     }
   },
 
-  // Get current auth state
+  // Get current auth state (client-side only)
   getAuthState: (): AuthState => {
     const token = authUtils.getToken();
     const user = authUtils.getUser();
@@ -113,10 +112,13 @@ export const authUtils = {
     };
   },
 
-  // Clear authentication data
+  // Clear authentication data (client-side only)
+  // Note: For proper logout, use the logout API endpoint which clears cookies server-side
   clearAuth: () => {
-    Cookies.remove(AUTH_TOKEN_KEY);
-    Cookies.remove(USER_DATA_KEY);
+    if (typeof window === 'undefined') return;
+    // Clear cookies by setting them to expire
+    document.cookie = `${AUTH_TOKEN_KEY}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    document.cookie = `${USER_DATA_KEY}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
   },
 
   // Check if user has specific role

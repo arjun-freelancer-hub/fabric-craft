@@ -52,26 +52,37 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const login = async (email: string, password: string) => {
         try {
             setIsLoading(true);
-            const response = await authApi.login(email, password);
+            
+            // Get redirect URL from query params
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectTo = urlParams.get('redirect') || '/dashboard';
+            
+            // Call the login route handler
+            const response = await fetch(`/api/auth/login?redirect=${encodeURIComponent(redirectTo)}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
 
-            if (response.success) {
-                const newAuthState = authUtils.getAuthState();
-                setAuthState(newAuthState);
-
-                // Set workspaces in Redux
-                const workspaces = (response.data as any).workspaces;
-                if (workspaces) {
-                    dispatch(setWorkspaces(workspaces));
-                }
-
-                // Redirect to dashboard or intended page
-                const urlParams = new URLSearchParams(window.location.search);
-                const redirect = urlParams.get('redirect') || '/dashboard';
-                router.push(redirect);
+            // Check if we got an error response
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: 'Login failed' }));
+                throw new Error(errorData.message || 'Login failed');
             }
+
+            // If response is a redirect (status 307/308), the route handler set cookies and wants to redirect
+            // Update auth state from cookies and navigate
+            const newAuthState = authUtils.getAuthState();
+            setAuthState(newAuthState);
+
+            // Navigate to the redirect URL (server-side redirect will happen, but we also navigate client-side)
+            // Use window.location for a full page reload to ensure cookies are available to proxy
+            window.location.href = redirectTo;
         } catch (error: any) {
             console.error('Login error:', error);
-            throw new Error(error.response?.data?.message || 'Login failed');
+            throw new Error(error.message || 'Login failed');
         } finally {
             setIsLoading(false);
         }
@@ -155,11 +166,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     const updateUser = (user: User) => {
-        const currentToken = authUtils.getToken();
-        if (currentToken) {
-            authUtils.setAuth(currentToken, user);
-            setAuthState(prev => ({ ...prev, user }));
-        }
+        // Update user in state - cookies are managed server-side
+        setAuthState(prev => ({ ...prev, user }));
     };
 
     const value: AuthContextType = {

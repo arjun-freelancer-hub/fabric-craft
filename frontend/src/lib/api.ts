@@ -377,13 +377,11 @@ export const billApi = {
 
 // Auth API
 export const authApi = {
+    // Note: login() is deprecated - use the route handler at /api/auth/login instead
+    // This method is kept for backward compatibility but does not set cookies
     login: async (email: string, password: string): Promise<ApiResponse<{ token: string; user: any }>> => {
         const response = await api.post('/auth/login', { email, password });
-        const { tokens, user } = response.data.data;
-
-        // Store auth data in cookies
-        authUtils.setAuth(tokens.accessToken, user);
-
+        // Cookies are now set server-side via route handler
         return response.data;
     },
 
@@ -396,13 +394,10 @@ export const authApi = {
         organizationName?: string;
     }): Promise<ApiResponse<{ user: any; workspaces: any[] }>> => {
         const response = await api.post('/auth/register', userData);
-        const { tokens, user, workspaces } = response.data.data;
-
-        // Store auth data in cookies (auto-login after registration)
-        authUtils.setAuth(tokens.accessToken, user);
-
+        // Cookies should be set server-side via route handler
         // Set default workspace if available
-        if (workspaces && workspaces.length > 0) {
+        const { workspaces } = response.data.data;
+        if (workspaces && workspaces.length > 0 && typeof window !== 'undefined') {
             localStorage.setItem('currentWorkspaceId', workspaces[0].id);
         }
 
@@ -417,13 +412,10 @@ export const authApi = {
         password?: string;
     }): Promise<ApiResponse<{ user: any; workspaces: any[] }>> => {
         const response = await api.post('/auth/accept-invitation', invitationData);
-        const { tokens, user, workspaces } = response.data.data;
-
-        // Store auth data in cookies (auto-login after acceptance)
-        authUtils.setAuth(tokens.accessToken, user);
-
+        // Cookies should be set server-side via route handler
         // Set default workspace if available
-        if (workspaces && workspaces.length > 0) {
+        const { workspaces } = response.data.data;
+        if (workspaces && workspaces.length > 0 && typeof window !== 'undefined') {
             localStorage.setItem('currentWorkspaceId', workspaces[0].id);
         }
 
@@ -476,14 +468,7 @@ export const authApi = {
 
     refreshToken: async (): Promise<ApiResponse<{ token: string }>> => {
         const response = await api.post('/auth/refresh');
-        const { tokens } = response.data.data;
-
-        // Update token in cookies
-        const user = authUtils.getUser();
-        if (user) {
-            authUtils.setAuth(tokens.accessToken, user);
-        }
-
+        // Token refresh should be handled server-side via route handler
         return response.data;
     },
 };
