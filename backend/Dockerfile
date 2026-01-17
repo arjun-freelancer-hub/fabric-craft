@@ -1,85 +1,64 @@
-# Stage 1: Builder - Install all dependencies and build
-FROM node:18-alpine AS builder
-
-# Set working directory
+# Stage 1: Dependencies
+FROM node:18-alpine AS deps
+RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /app
 
-# Install system dependencies
-RUN apk add --no-cache \
-    python3 \
-    make \
-    g++ \
-    cairo-dev \
-    jpeg-dev \
-    pango-dev \
-    musl-dev \
-    giflib-dev \
-    pixman-dev \
-    pangomm-dev \
-    libjpeg-turbo-dev \
-    freetype-dev
-
 # Copy package files
-COPY package*.json ./
-COPY tsconfig.json ./
-
-# Install all dependencies (including devDependencies for build)
+COPY package.json package-lock.json* ./
 RUN npm ci
 
-# Copy source code
+# Stage 2: Builder
+FROM node:18-alpine AS builder
+RUN apk add --no-cache libc6-compat python3 make g++
+WORKDIR /app
+
+# Copy dependencies from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy source code and configuration
+COPY package.json package-lock.json* ./
+COPY tsconfig.json ./
 COPY src/ ./src/
 COPY prisma/ ./prisma/
 
 # Generate Prisma client
 RUN npx prisma generate
 
-# Build the application
+# Build TypeScript
 RUN npm run build
 
-# Stage 2: Production - Only production dependencies
+# Stage 3: Production
 FROM node:18-alpine AS runner
-
 WORKDIR /app
 
-# Install only runtime system dependencies
-RUN apk add --no-cache \
-    cairo \
-    jpeg \
-    pango \
-    musl \
-    giflib \
-    pixman \
-    libjpeg-turbo \
-    freetype
-
-# Copy package files
-COPY package*.json ./
+ENV NODE_ENV=production
 
 # Install only production dependencies
-RUN npm ci --only=production
+COPY package.json package-lock.json* ./
+RUN npm ci --only=production && npm cache clean --force
 
 # Copy built application from builder
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
-# Create uploads and logs directories
+# Create directories for uploads and logs
 RUN mkdir -p uploads logs
 
 # Create non-root user
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nodejs -u 1001
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001
 
-# Change ownership of the app directory
+# Change ownership
 RUN chown -R nodejs:nodejs /app
+
 USER nodejs
 
-# Expose port
 EXPOSE 5000
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
     CMD node -e "require('http').get('http://localhost:5000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["node", "dist/index.js"]

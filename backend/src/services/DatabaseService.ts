@@ -4,6 +4,7 @@ import { DatabaseInitializer } from '@/utils/DatabaseInitializer';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import path from 'path';
+import fs from 'fs';
 
 const execAsync = promisify(exec);
 
@@ -54,7 +55,22 @@ export class DatabaseService {
             this.logger.info('🔄 Running database migrations...');
 
             // Use prisma db push for development (creates tables without migration files)
+            // In Docker, __dirname will be /app/dist, so we need to go up one level to /app
+            // In development, __dirname will be dist, so we go up to backend root
             const backendPath = path.resolve(__dirname, '../..');
+            const prismaPath = path.join(backendPath, 'prisma', 'schema.prisma');
+
+            // Verify Prisma schema exists
+            if (!fs.existsSync(prismaPath)) {
+                // Try alternative path (for Docker where we're in /app)
+                const altPath = path.resolve(process.cwd(), 'prisma', 'schema.prisma');
+                if (fs.existsSync(altPath)) {
+                    this.logger.info(`Using Prisma schema at: ${altPath}`);
+                } else {
+                    this.logger.warn(`Prisma schema not found at ${prismaPath} or ${altPath}, attempting to continue...`);
+                }
+            }
+
             const { stdout, stderr } = await execAsync('npx prisma db push --skip-generate', {
                 cwd: backendPath,
                 env: { ...process.env }

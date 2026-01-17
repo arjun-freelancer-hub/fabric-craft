@@ -4,86 +4,120 @@ services:
   # MySQL Database
   mysql:
     image: mysql:8.0
-    container_name: clothing_store_mysql
+    container_name: fabric_craft_mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-clothing_store_root}
-      MYSQL_DATABASE: ${DB_NAME:-clothing_store}
-      MYSQL_USER: ${DB_USER:-clothing_store_user}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-clothing_store_password}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-fabric_craft_root}
+      MYSQL_DATABASE: ${DB_NAME:-fabric_craft}
+      MYSQL_USER: ${DB_USER:-fabric_craft_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-fabric_craft_password}
     ports:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - clothing_store_network
+      - fabric_craft_network
     command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD:-fabric_craft_root}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   # Redis (Optional - for caching)
   redis:
     image: redis:7-alpine
-    container_name: clothing_store_redis
+    container_name: fabric_craft_redis
     restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
     networks:
-      - clothing_store_network
+      - fabric_craft_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
   # Backend API
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: clothing_store_backend
+    container_name: fabric_craft_backend
     restart: unless-stopped
     environment:
       NODE_ENV: production
       PORT: 5000
       DB_HOST: mysql
       DB_PORT: 3306
-      DB_NAME: ${DB_NAME:-clothing_store}
-      DB_USER: ${DB_USER:-clothing_store_user}
-      DB_PASSWORD: ${DB_PASSWORD:-clothing_store_password}
-      DATABASE_URL: mysql://${DB_USER:-clothing_store_user}:${DB_PASSWORD:-clothing_store_password}@mysql:3306/${DB_NAME:-clothing_store}
-      JWT_SECRET: ${JWT_SECRET:-your_super_secret_jwt_key_here}
-      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-your_super_secret_refresh_key_here}
+      DB_NAME: ${DB_NAME:-fabric_craft}
+      DB_USER: ${DB_USER:-fabric_craft_user}
+      DB_PASSWORD: ${DB_PASSWORD:-fabric_craft_password}
+      DATABASE_URL: mysql://${DB_USER:-fabric_craft_user}:${DB_PASSWORD:-fabric_craft_password}@mysql:3306/${DB_NAME:-fabric_craft}
+      JWT_SECRET: ${JWT_SECRET:-your_super_secret_jwt_key_here_change_in_production}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-your_super_secret_refresh_key_here_change_in_production}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-24h}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
+      FRONTEND_URL: ${FRONTEND_URL:-http://frontend:3000}
       REDIS_URL: redis://redis:6379
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-900000}
+      RATE_LIMIT_MAX_REQUESTS: ${RATE_LIMIT_MAX_REQUESTS:-100}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      LOG_FILE: ./logs/app.log
     ports:
       - "5000:5000"
     volumes:
       - ./backend/uploads:/app/uploads
       - ./backend/logs:/app/logs
     depends_on:
-      - mysql
-      - redis
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
-      - clothing_store_network
+      - fabric_craft_network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
 
   # Frontend
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: clothing_store_frontend
+    container_name: fabric_craft_frontend
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:5000/api}
-      NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME:-Clothing Store}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://backend:5000/api}
+      NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME:-FabricCraft}
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
-      - clothing_store_network
+      - fabric_craft_network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
 
 volumes:
   mysql_data:
+    driver: local
   redis_data:
-
+    driver: local
 
 networks:
-  clothing_store_network:
+  fabric_craft_network:
     driver: bridge
