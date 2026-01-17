@@ -16,11 +16,32 @@
 ## 🚀 Quick Start
 
 ### Prerequisites
+
+**For Docker (Recommended):**
+- Docker 20.10+
+- Docker Compose 2.0+
+
+**For Manual Setup:**
 - Node.js 18+
 - MySQL 8+
 - npm or bun
 
-### Installation
+### Installation with Docker Compose
+
+```bash
+# Clone repository
+git clone <your-repo>
+cd fabric-craft
+
+# Start all services
+docker-compose up -d
+
+# Wait for services to be ready, then access:
+# Frontend: http://localhost:3000
+# Backend: http://localhost:5000
+```
+
+### Manual Installation
 
 ```bash
 # Clone repository
@@ -50,11 +71,11 @@ npm run dev
 
 ## 📖 Documentation
 
-Comprehensive guides in project root:
-- **[START_HERE.md](START_HERE.md)** - Quick start guide
-- **[FINAL_IMPLEMENTATION_GUIDE.md](FINAL_IMPLEMENTATION_GUIDE.md)** - Complete usage guide
-- **[IMPLEMENTATION_COMPLETE.md](IMPLEMENTATION_COMPLETE.md)** - Technical details
-- **[COMPLETE_SYSTEM_SUMMARY.md](COMPLETE_SYSTEM_SUMMARY.md)** - System summary
+Comprehensive guides in `docs/` folder:
+- **[docs/INSTALLATION.md](docs/INSTALLATION.md)** - Installation guide
+- **[docs/USAGE_GUIDE.md](docs/USAGE_GUIDE.md)** - Usage guide
+- **[docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)** - API documentation
+- **[docs/TESTING_GUIDE.md](docs/TESTING_GUIDE.md)** - Testing guide
 
 ## 🎯 How It Works
 
@@ -198,14 +219,55 @@ cd frontend && npm run dev
 
 ## 📦 Deployment
 
-### Backend
+### Using Docker Compose (Recommended)
+
+The easiest way to run the entire application is using Docker Compose:
+
+```bash
+# Build and start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop all services
+docker-compose down
+
+# Rebuild containers after code changes
+docker-compose up -d --build
+
+# Stop and remove volumes (clean slate)
+docker-compose down -v
+```
+
+**Services:**
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5000
+- MySQL: localhost:3306
+- Redis: localhost:6379
+
+**Environment Variables:**
+Create a `.env` file in the project root (optional):
+```env
+DB_NAME=clothing_store
+DB_USER=clothing_store_user
+DB_PASSWORD=your_secure_password
+JWT_SECRET=your_jwt_secret_key
+JWT_REFRESH_SECRET=your_refresh_secret_key
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_APP_NAME=Clothing Store
+```
+
+### Manual Deployment
+
+#### Backend
 ```bash
 cd backend
 npm run build
 npm start
 ```
 
-### Frontend
+#### Frontend
 ```bash
 cd frontend
 npm run build
@@ -249,7 +311,4 @@ Built with ❤️ for modern tailor shops
 
 ---
 
-For detailed documentation, see:
-- [START_HERE.md](START_HERE.md) - Quick start
-- [FINAL_IMPLEMENTATION_GUIDE.md](FINAL_IMPLEMENTATION_GUIDE.md) - Complete guide
-- [COMPLETE_SYSTEM_SUMMARY.md](COMPLETE_SYSTEM_SUMMARY.md) - System summary
+For detailed documentation, see the `docs/` folder.
