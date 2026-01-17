@@ -38,7 +38,7 @@ export const serverAuthUtils = {
     
     try {
       const { cookies } = await import('next/headers');
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       return cookieStore.get(AUTH_TOKEN_KEY)?.value || null;
     } catch {
       return null;
@@ -54,7 +54,7 @@ export const serverAuthUtils = {
 
     try {
       const { cookies } = await import('next/headers');
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       const userData = cookieStore.get(USER_DATA_KEY)?.value;
       if (!userData) return null;
       return JSON.parse(userData);
