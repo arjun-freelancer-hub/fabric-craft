@@ -4282,3 +4282,61 @@ The database is already in sync with the Prisma schema.
 [2026-01-17T12:17:36.365Z] [INFO] ::1 - - [17/Jan/2026:12:17:36 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
 [2026-01-17T12:18:11.675Z] [INFO] ::1 - - [17/Jan/2026:12:18:11 +0000] "GET /health HTTP/1.1" 200 105 "-" "-"
 [2026-01-17T12:18:42.165Z] [INFO] ::1 - - [17/Jan/2026:12:18:42 +0000] "GET /health HTTP/1.1" 200 105 "-" "-"
+[2026-01-17T17:29:35.928Z] [INFO] Checking database existence...
+[2026-01-17T17:29:35.979Z] [INFO] ✅ Database 'clothing_store' already exists.
+[2026-01-17T17:29:35.979Z] [INFO] 🔄 Running database migrations...
+[2026-01-17T17:29:36.891Z] [INFO] Prisma schema loaded from prisma/schema.prisma
+Datasource "db": MySQL database "clothing_store" at "mysql:3306"
+
+🚀  Your database is now in sync with your Prisma schema. Done in 506ms
+[2026-01-17T17:29:36.891Z] [WARN] ┌─────────────────────────────────────────────────────────┐
+│  Update available 5.22.0 -> 7.2.0                       │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+[2026-01-17T17:29:36.891Z] [INFO] ✅ Database schema synchronized successfully!
+[2026-01-17T17:29:36.894Z] [INFO] ✅ Database connected successfully
+[2026-01-17T17:29:36.894Z] [INFO] Database connected successfully
+[2026-01-17T17:29:36.894Z] [INFO] Initializing routes...
+[2026-01-17T17:29:36.901Z] [INFO] Email service initialized successfully
+[2026-01-17T17:29:36.905Z] [INFO] Email service initialized successfully
+[2026-01-17T17:29:36.919Z] [INFO] Routes initialized successfully
+[2026-01-17T17:29:36.920Z] [INFO] 🚀 Backend server running on port 5001
+[2026-01-17T17:29:36.920Z] [INFO] 📊 Health check: http://localhost:5001/health
+[2026-01-17T17:29:36.921Z] [INFO] 🔗 API base URL: http://localhost:5001/api
+[2026-01-17T17:29:36.921Z] [INFO] 🌍 Environment: production
+[2026-01-17T17:29:37.036Z] [INFO] ::1 - - [17/Jan/2026:17:29:37 +0000] "GET /health HTTP/1.1" 200 102 "-" "-"
+[2026-01-17T17:30:07.138Z] [INFO] ::1 - - [17/Jan/2026:17:30:07 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T17:30:37.254Z] [INFO] ::1 - - [17/Jan/2026:17:30:37 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T17:31:07.363Z] [INFO] ::1 - - [17/Jan/2026:17:31:07 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T17:31:31.748Z] [INFO] ::ffff:172.66.156.100 - - [17/Jan/2026:17:31:31 +0000] "POST /api/auth/login HTTP/1.1" 401 65 "http://localhost:3001/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Safari/605.1.15"
+[2026-01-17T17:31:33.956Z] [INFO] ::ffff:172.66.156.100 - - [17/Jan/2026:17:31:33 +0000] "POST /api/auth/login HTTP/1.1" 401 65 "http://localhost:3001/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Safari/605.1.15"
+[2026-01-17T17:31:37.513Z] [INFO] ::1 - - [17/Jan/2026:17:31:37 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T17:32:07.606Z] [INFO] ::1 - - [17/Jan/2026:17:32:07 +0000] "GET /health HTTP/1.1" 200 103 "-" "-"
+[2026-01-17T17:32:37.727Z] [INFO] ::1 - - [17/Jan/2026:17:32:37 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T17:32:56.873Z] [INFO] User logged in successfully {
+  "userId": "cmkil4whv00007lvhm85c1f7n",
+  "email": "admin@fabriccraft.com",
+  "workspaceCount": 1
+}
+[2026-01-17T17:32:56.875Z] [INFO] ::ffff:172.66.156.100 - - [17/Jan/2026:17:32:56 +0000] "POST /api/auth/login HTTP/1.1" 200 849 "http://localhost:3001/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Safari/605.1.15"
+[2026-01-17T17:33:05.197Z] [INFO] User logged in successfully {
+  "userId": "cmkil4whv00007lvhm85c1f7n",
+  "email": "admin@fabriccraft.com",
+  "workspaceCount": 1
+}
+[2026-01-17T17:33:05.198Z] [INFO] ::ffff:172.66.156.100 - - [17/Jan/2026:17:33:05 +0000] "POST /api/auth/login HTTP/1.1" 200 849 "http://localhost:3001/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Safari/605.1.15"
+[2026-01-17T17:33:07.829Z] [INFO] ::1 - - [17/Jan/2026:17:33:07 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T17:33:16.128Z] [INFO] User logged in successfully {
+  "userId": "cmkil4whv00007lvhm85c1f7n",
+  "email": "admin@fabriccraft.com",
+  "workspaceCount": 1
+}
+[2026-01-17T17:33:16.129Z] [INFO] ::ffff:172.66.156.100 - - [17/Jan/2026:17:33:16 +0000] "POST /api/auth/login HTTP/1.1" 200 849 "http://localhost:3001/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Safari/605.1.15"
+[2026-01-17T17:33:37.932Z] [INFO] ::1 - - [17/Jan/2026:17:33:37 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"
+[2026-01-17T17:34:08.028Z] [INFO] ::1 - - [17/Jan/2026:17:34:08 +0000] "GET /health HTTP/1.1" 200 104 "-" "-"

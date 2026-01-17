@@ -24,7 +24,7 @@ class App {
 
     constructor() {
         this.app = express();
-        this.port = parseInt(process.env.PORT || '5000', 10);
+        this.port = parseInt(process.env.PORT || '5001', 10);
         this.databaseService = DatabaseService.getInstance();
         this.logger = new Logger();
 

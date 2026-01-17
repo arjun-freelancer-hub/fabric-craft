@@ -19,12 +19,12 @@ const nextConfig = {
         unoptimized: true,
     },
     env: {
-        NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
+        NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api',
         NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME || 'Clothing Store',
     },
     async rewrites() {
         // Get API URL with fallback for build time
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://backend:5000/api';
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://backend:5001/api';
 
         return [
             {

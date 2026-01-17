@@ -64,8 +64,9 @@ services:
       - REDIS_URL=redis://redis:6379
       - NODE_ENV=production
       - FRONTEND_URL=http://localhost:3001
+      - PORT=5001
     ports:
-      - "5000:5000"
+      - "5001:5001"
     volumes:
       - ./backend/uploads:/app/uploads
       - ./backend/logs:/app/logs
@@ -75,7 +76,7 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5001/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -89,7 +90,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - NEXT_PUBLIC_API_URL=http://localhost:5000/api
+        - NEXT_PUBLIC_API_URL=http://localhost:5001/api
         - NEXT_PUBLIC_APP_NAME=${NEXT_PUBLIC_APP_NAME:-Clothing Store}
     container_name: fabric-craft-frontend
     restart: unless-stopped
@@ -97,7 +98,7 @@ services:
       - ./frontend/.env.local
     environment:
       # Override Docker-specific networking variables
-      - NEXT_PUBLIC_API_URL=http://localhost:5000/api
+      - NEXT_PUBLIC_API_URL=http://localhost:5001/api
       - NODE_ENV=production
     ports:
       - "3001:3000"
