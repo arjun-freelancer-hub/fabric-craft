@@ -1,4 +1,4 @@
-import { PrismaClient, ProductType } from '@prisma/client';
+import { PrismaClient, ProductType, MemberRole } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -18,12 +18,29 @@ async function main() {
       password: hashedAdminPassword,
       firstName: 'Admin',
       lastName: 'User',
-      role: 'ADMIN',
       isActive: true,
     },
   });
 
   console.log('✅ Admin user created:', adminUser.email);
+
+  // Create admin's organization (workspace)
+  let adminOrg = await prisma.organization.findFirst({
+    where: { ownerId: adminUser.id },
+  });
+
+  if (!adminOrg) {
+    adminOrg = await prisma.organization.create({
+      data: {
+        name: "Admin's Tailor Shop",
+        description: 'Admin workspace',
+        ownerId: adminUser.id,
+        isActive: true,
+      },
+    });
+  }
+
+  console.log('✅ Admin organization created:', adminOrg.name);
 
   // Create staff user
   const hashedStaffPassword = await bcrypt.hash('staff123', 10);
@@ -37,14 +54,82 @@ async function main() {
       password: hashedStaffPassword,
       firstName: 'Staff',
       lastName: 'User',
-      role: 'STAFF',
       isActive: true,
     },
   });
 
   console.log('✅ Staff user created:', staffUser.email);
 
-  // Create categories
+  // Create staff's organization (workspace)
+  let staffOrg = await prisma.organization.findFirst({
+    where: { ownerId: staffUser.id },
+  });
+
+  if (!staffOrg) {
+    staffOrg = await prisma.organization.create({
+      data: {
+        name: "Staff's Tailor Shop",
+        description: 'Staff workspace',
+        ownerId: staffUser.id,
+        isActive: true,
+      },
+    });
+  }
+
+  console.log('✅ Staff organization created:', staffOrg.name);
+
+  // Create organization members (admin as OWNER of their org, staff as MEMBER of admin org)
+  await prisma.organizationMember.upsert({
+    where: {
+      organizationId_userId: {
+        organizationId: adminOrg.id,
+        userId: adminUser.id,
+      },
+    },
+    update: {},
+    create: {
+      organizationId: adminOrg.id,
+      userId: adminUser.id,
+      role: MemberRole.OWNER,
+      isActive: true,
+    },
+  });
+
+  await prisma.organizationMember.upsert({
+    where: {
+      organizationId_userId: {
+        organizationId: adminOrg.id,
+        userId: staffUser.id,
+      },
+    },
+    update: {},
+    create: {
+      organizationId: adminOrg.id,
+      userId: staffUser.id,
+      role: MemberRole.MEMBER,
+      isActive: true,
+    },
+  });
+
+  await prisma.organizationMember.upsert({
+    where: {
+      organizationId_userId: {
+        organizationId: staffOrg.id,
+        userId: staffUser.id,
+      },
+    },
+    update: {},
+    create: {
+      organizationId: staffOrg.id,
+      userId: staffUser.id,
+      role: MemberRole.OWNER,
+      isActive: true,
+    },
+  });
+
+  console.log('✅ Organization members created');
+
+  // Create categories for admin organization
   const categories = [
     { name: 'Shirts', description: 'All types of shirts' },
     { name: 'Pants', description: 'Trousers and pants' },
@@ -55,26 +140,42 @@ async function main() {
 
   for (const category of categories) {
     await prisma.category.upsert({
-      where: { name: category.name },
+      where: {
+        organizationId_name: {
+          organizationId: adminOrg.id,
+          name: category.name,
+        },
+      },
       update: {},
-      create: category,
+      create: {
+        ...category,
+        organizationId: adminOrg.id,
+        isActive: true,
+      },
     });
   }
 
   console.log('✅ Categories created');
 
   // Get category IDs
-  const shirtCategory = await prisma.category.findUnique({ where: { name: 'Shirts' } });
-  const fabricCategory = await prisma.category.findUnique({ where: { name: 'Fabrics' } });
-  const pantsCategory = await prisma.category.findUnique({ where: { name: 'Pants' } });
+  const shirtCategory = await prisma.category.findFirst({
+    where: { organizationId: adminOrg.id, name: 'Shirts' },
+  });
+  const fabricCategory = await prisma.category.findFirst({
+    where: { organizationId: adminOrg.id, name: 'Fabrics' },
+  });
+  const pantsCategory = await prisma.category.findFirst({
+    where: { organizationId: adminOrg.id, name: 'Pants' },
+  });
 
-  // Create sample products
+  // Create sample products for admin organization
   const products = [
     {
       name: 'Cotton Shirt',
       sku: 'SHIRT-001',
       barcode: '123456789012',
       categoryId: shirtCategory!.id,
+      organizationId: adminOrg.id,
       type: ProductType.READY_MADE,
       unit: 'piece',
       basePrice: 500,
@@ -91,6 +192,7 @@ async function main() {
       sku: 'FABRIC-001',
       barcode: '123456789013',
       categoryId: fabricCategory!.id,
+      organizationId: adminOrg.id,
       type: ProductType.FABRIC,
       unit: 'meter',
       basePrice: 200,
@@ -108,6 +210,7 @@ async function main() {
       sku: 'JEANS-001',
       barcode: '123456789014',
       categoryId: pantsCategory!.id,
+      organizationId: adminOrg.id,
       type: ProductType.READY_MADE,
       unit: 'piece',
       basePrice: 800,
@@ -123,7 +226,12 @@ async function main() {
 
   for (const product of products) {
     await prisma.product.upsert({
-      where: { sku: product.sku },
+      where: {
+        organizationId_sku: {
+          organizationId: adminOrg.id,
+          sku: product.sku,
+        },
+      },
       update: {},
       create: product,
     });
@@ -131,7 +239,7 @@ async function main() {
 
   console.log('✅ Sample products created');
 
-  // Create sample customers
+  // Create sample customers for admin organization
   const customers = [
     {
       firstName: 'John',
@@ -142,6 +250,7 @@ async function main() {
       city: 'Mumbai',
       state: 'Maharashtra',
       pincode: '400001',
+      organizationId: adminOrg.id,
       isActive: true,
       createdBy: adminUser.id,
     },
@@ -154,21 +263,33 @@ async function main() {
       city: 'Delhi',
       state: 'Delhi',
       pincode: '110001',
+      organizationId: adminOrg.id,
       isActive: true,
       createdBy: adminUser.id,
     },
   ];
 
   for (const customer of customers) {
-    await prisma.customer.create({
-      data: customer,
+    const existingCustomer = await prisma.customer.findFirst({
+      where: {
+        organizationId: adminOrg.id,
+        email: customer.email,
+      },
     });
+
+    if (!existingCustomer) {
+      await prisma.customer.create({
+        data: customer,
+      });
+    }
   }
 
   console.log('✅ Sample customers created');
 
   // Add initial inventory
-  const productsList = await prisma.product.findMany();
+  const productsList = await prisma.product.findMany({
+    where: { organizationId: adminOrg.id },
+  });
 
   for (const product of productsList) {
     await prisma.inventory.create({
@@ -185,7 +306,10 @@ async function main() {
 
   console.log('✅ Initial inventory added');
 
-  console.log('🎉 Database seed completed successfully!');
+  console.log('\n🎉 Database seed completed successfully!');
+  console.log('\n📝 Demo Credentials:');
+  console.log('   Admin: admin@fabriccraft.com / admin123');
+  console.log('   Staff: staff@fabriccraft.com / staff123');
 }
 
 main()

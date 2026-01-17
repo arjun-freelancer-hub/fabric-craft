@@ -9,10 +9,10 @@ services:
     environment:
       # MySQL will use DB_PASSWORD, DB_NAME, DB_USER from backend/.env
       # If not set in .env, use defaults
+      # Note: MySQL doesn't allow MYSQL_USER="root", so we only set MYSQL_ROOT_PASSWORD
+      # If you need a non-root user, set DB_USER to something other than "root" in backend/.env
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-rootpassword}
       MYSQL_DATABASE: ${DB_NAME:-clothing_store}
-      MYSQL_USER: ${DB_USER:-root}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-rootpassword}
     ports:
       - "3306:3306"
     volumes:
@@ -62,7 +62,7 @@ services:
       # or can be overridden here if needed
       - REDIS_URL=redis://redis:6379
       - NODE_ENV=production
-      - FRONTEND_URL=http://localhost:3000
+      - FRONTEND_URL=http://localhost:3001
     ports:
       - "5000:5000"
     volumes:
@@ -99,7 +99,7 @@ services:
       - NEXT_PUBLIC_API_URL=http://localhost:5000/api
       - NODE_ENV=production
     ports:
-      - "3000:3000"
+      - "3001:3000"
     depends_on:
       backend:
         condition: service_healthy

@@ -46,10 +46,16 @@ RUN npm ci --only=production && npm cache clean --force
 # This is more reliable than tsconfig-paths for production builds
 RUN npm install module-alias
 
+# Install ts-node and tsconfig-paths for running seed script in production
+RUN npm install ts-node tsconfig-paths
+
 # Copy Prisma files and generated client
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+
+# Copy seed script for database seeding
+COPY --from=builder /app/prisma/seed.ts ./prisma/seed.ts
 
 # Copy built application
 COPY --from=builder /app/dist ./dist
