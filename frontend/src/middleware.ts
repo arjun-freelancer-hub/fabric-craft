@@ -29,10 +29,10 @@ const adminRoutes = [
   '/admin/settings'
 ];
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Get auth token from cookies
+  // Get auth token from cookies using Next.js cookies API
   const token = request.cookies.get('authToken')?.value;
   const userData = request.cookies.get('userData')?.value;
 
@@ -46,7 +46,7 @@ export function proxy(request: NextRequest) {
   }
 
   const isAuthenticated = !!token && !!user;
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'ADMIN' || user?.role === 'OWNER';
 
   // Check if the current path is protected
   const isProtectedRoute = protectedRoutes.some(route =>

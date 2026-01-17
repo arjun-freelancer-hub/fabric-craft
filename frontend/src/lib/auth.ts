@@ -26,6 +26,56 @@ const cookieOptions = {
   expires: 7, // 7 days
 };
 
+// Server-side cookie utilities using Next.js cookies API
+// These functions are safe to use in server components and middleware
+export const serverAuthUtils = {
+  // Get authentication token from server-side cookies
+  getToken: async (): Promise<string | null> => {
+    if (typeof window !== 'undefined') {
+      // Client-side, use client utilities
+      return null;
+    }
+    
+    try {
+      const { cookies } = await import('next/headers');
+      const cookieStore = cookies();
+      return cookieStore.get(AUTH_TOKEN_KEY)?.value || null;
+    } catch {
+      return null;
+    }
+  },
+
+  // Get user data from server-side cookies
+  getUser: async (): Promise<User | null> => {
+    if (typeof window !== 'undefined') {
+      // Client-side, use client utilities
+      return null;
+    }
+
+    try {
+      const { cookies } = await import('next/headers');
+      const cookieStore = cookies();
+      const userData = cookieStore.get(USER_DATA_KEY)?.value;
+      if (!userData) return null;
+      return JSON.parse(userData);
+    } catch {
+      return null;
+    }
+  },
+
+  // Get current auth state from server-side cookies
+  getAuthState: async (): Promise<AuthState> => {
+    const token = await serverAuthUtils.getToken();
+    const user = await serverAuthUtils.getUser();
+
+    return {
+      isAuthenticated: !!token && !!user,
+      user,
+      token,
+    };
+  },
+};
+
 export const authUtils = {
   // Set authentication token and user data
   setAuth: (token: string, user: User) => {
