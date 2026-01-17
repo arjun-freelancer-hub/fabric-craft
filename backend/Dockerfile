@@ -1,5 +1,5 @@
 # Stage 1: Dependencies
-FROM node:18-alpine AS deps
+FROM node:24-alpine AS deps
 RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /app
 
@@ -8,7 +8,7 @@ COPY package.json package-lock.json* ./
 RUN npm ci
 
 # Stage 2: Builder
-FROM node:18-alpine AS builder
+FROM node:24-alpine AS builder
 RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /app
 
@@ -28,7 +28,7 @@ RUN npx prisma generate
 RUN npm run build
 
 # Stage 3: Production
-FROM node:18-alpine AS runner
+FROM node:24-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
