@@ -3255,3 +3255,110 @@ The database is already in sync with the Prisma schema.
 [2025-10-09T16:47:17.225Z] [INFO] ::1 - - [09/Oct/2025:16:47:17 +0000] "GET /api/auth/profile HTTP/1.1" 401 - "http://localhost:3000/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
 [2025-10-09T16:47:50.952Z] [INFO] Database disconnected successfully
 [2025-10-09T16:47:50.956Z] [INFO] Server stopped gracefully
+[2026-01-17T10:47:11.759Z] [INFO] Checking database existence...
+[2026-01-17T10:47:20.806Z] [INFO] Checking database existence...
+[2026-01-17T10:47:27.647Z] [INFO] Checking database existence...
+[2026-01-17T10:47:33.867Z] [INFO] Checking database existence...
+[2026-01-17T10:47:41.795Z] [INFO] Checking database existence...
+[2026-01-17T10:47:41.871Z] [ERROR] Failed to initialize database: {
+  "message": "Access denied for user 'root'@'172.19.0.4' (using password: YES)",
+  "code": "ER_ACCESS_DENIED_ERROR",
+  "errno": 1045,
+  "sqlState": "28000"
+}
+[2026-01-17T10:47:41.873Z] [ERROR] ❌ Access denied for user 'root'
+[2026-01-17T10:47:41.894Z] [ERROR]    Please check your database credentials in .env file
+[2026-01-17T10:47:41.913Z] [ERROR] ❌ Failed to connect to database: {
+  "message": "Access denied for user 'root'@'172.19.0.4' (using password: YES)",
+  "code": "ER_ACCESS_DENIED_ERROR",
+  "errno": 1045,
+  "sqlState": "28000"
+}
+[2026-01-17T10:47:41.933Z] [ERROR] Failed to start server: {
+  "message": "Access denied for user 'root'@'172.19.0.4' (using password: YES)",
+  "code": "ER_ACCESS_DENIED_ERROR",
+  "errno": 1045,
+  "sqlState": "28000"
+}
+[2026-01-17T10:47:41.951Z] [ERROR] Error details: Access denied for user 'root'@'172.19.0.4' (using password: YES)
+[2026-01-17T10:47:41.972Z] [ERROR] Error stack: Error: Access denied for user 'root'@'172.19.0.4' (using password: YES)
+    at Object.createConnectionPromise [as createConnection] (/app/node_modules/mysql2/promise.js:19:31)
+    at DatabaseInitializer.initializeDatabase (/app/dist/utils/DatabaseInitializer.js:40:50)
+    at DatabaseService.connect (/app/dist/services/DatabaseService.js:77:38)
+    at App.start (/app/dist/index.js:106:40)
+    at Object.<anonymous> (/app/dist/index.js:168:9)
+    at Module._compile (node:internal/modules/cjs/loader:1761:14)
+    at Object..js (node:internal/modules/cjs/loader:1893:10)
+    at Module.load (node:internal/modules/cjs/loader:1481:32)
+    at Module._load (node:internal/modules/cjs/loader:1300:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+[2026-01-17T10:47:53.062Z] [INFO] Checking database existence...
+[2026-01-17T10:47:53.194Z] [ERROR] Failed to initialize database: {
+  "message": "Access denied for user 'root'@'172.19.0.4' (using password: YES)",
+  "code": "ER_ACCESS_DENIED_ERROR",
+  "errno": 1045,
+  "sqlState": "28000"
+}
+[2026-01-17T10:47:53.204Z] [ERROR] ❌ Access denied for user 'root'
+[2026-01-17T10:47:53.228Z] [ERROR]    Please check your database credentials in .env file
+[2026-01-17T10:47:53.248Z] [ERROR] ❌ Failed to connect to database: {
+  "message": "Access denied for user 'root'@'172.19.0.4' (using password: YES)",
+  "code": "ER_ACCESS_DENIED_ERROR",
+  "errno": 1045,
+  "sqlState": "28000"
+}
+[2026-01-17T10:47:53.285Z] [ERROR] Failed to start server: {
+  "message": "Access denied for user 'root'@'172.19.0.4' (using password: YES)",
+  "code": "ER_ACCESS_DENIED_ERROR",
+  "errno": 1045,
+  "sqlState": "28000"
+}
+[2026-01-17T10:47:53.298Z] [ERROR] Error details: Access denied for user 'root'@'172.19.0.4' (using password: YES)
+[2026-01-17T10:47:53.316Z] [ERROR] Error stack: Error: Access denied for user 'root'@'172.19.0.4' (using password: YES)
+    at Object.createConnectionPromise [as createConnection] (/app/node_modules/mysql2/promise.js:19:31)
+    at DatabaseInitializer.initializeDatabase (/app/dist/utils/DatabaseInitializer.js:40:50)
+    at DatabaseService.connect (/app/dist/services/DatabaseService.js:77:38)
+    at App.start (/app/dist/index.js:106:40)
+    at Object.<anonymous> (/app/dist/index.js:168:9)
+    at Module._compile (node:internal/modules/cjs/loader:1761:14)
+    at Object..js (node:internal/modules/cjs/loader:1893:10)
+    at Module.load (node:internal/modules/cjs/loader:1481:32)
+    at Module._load (node:internal/modules/cjs/loader:1300:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+[2026-01-17T10:48:02.969Z] [INFO] Checking database existence...
+[2026-01-17T10:48:16.313Z] [INFO] Checking database existence...
+[2026-01-17T10:48:16.393Z] [ERROR] Failed to initialize database: {
+  "message": "Access denied for user 'root'@'172.19.0.4' (using password: YES)",
+  "code": "ER_ACCESS_DENIED_ERROR",
+  "errno": 1045,
+  "sqlState": "28000"
+}
+[2026-01-17T10:48:16.397Z] [ERROR] ❌ Access denied for user 'root'
+[2026-01-17T10:48:16.416Z] [ERROR]    Please check your database credentials in .env file
+[2026-01-17T10:48:16.436Z] [ERROR] ❌ Failed to connect to database: {
+  "message": "Access denied for user 'root'@'172.19.0.4' (using password: YES)",
+  "code": "ER_ACCESS_DENIED_ERROR",
+  "errno": 1045,
+  "sqlState": "28000"
+}
+[2026-01-17T10:48:16.455Z] [ERROR] Failed to start server: {
+  "message": "Access denied for user 'root'@'172.19.0.4' (using password: YES)",
+  "code": "ER_ACCESS_DENIED_ERROR",
+  "errno": 1045,
+  "sqlState": "28000"
+}
+[2026-01-17T10:48:16.472Z] [ERROR] Error details: Access denied for user 'root'@'172.19.0.4' (using password: YES)
+[2026-01-17T10:48:16.489Z] [ERROR] Error stack: Error: Access denied for user 'root'@'172.19.0.4' (using password: YES)
+    at Object.createConnectionPromise [as createConnection] (/app/node_modules/mysql2/promise.js:19:31)
+    at DatabaseInitializer.initializeDatabase (/app/dist/utils/DatabaseInitializer.js:40:50)
+    at DatabaseService.connect (/app/dist/services/DatabaseService.js:77:38)
+    at App.start (/app/dist/index.js:106:40)
+    at Object.<anonymous> (/app/dist/index.js:168:9)
+    at Module._compile (node:internal/modules/cjs/loader:1761:14)
+    at Object..js (node:internal/modules/cjs/loader:1893:10)
+    at Module.load (node:internal/modules/cjs/loader:1481:32)
+    at Module._load (node:internal/modules/cjs/loader:1300:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+[2026-01-17T10:48:36.272Z] [INFO] Checking database existence...
+[2026-01-17T10:49:44.355Z] [INFO] Checking database existence...
+[2026-01-17T10:50:16.436Z] [INFO] Checking database existence...
