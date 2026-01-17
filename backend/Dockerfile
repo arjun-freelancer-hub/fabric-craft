@@ -34,8 +34,9 @@ RUN npm run build
 FROM node:24-alpine AS runner
 WORKDIR /app
 
-# Install OpenSSL 1.1 compatibility library for Prisma (required for Alpine/musl)
-RUN apk add --no-cache openssl1.1-compat libc6-compat
+# Install OpenSSL and compatibility libraries for Prisma (required for Alpine/musl)
+# Alpine 3.18+ uses OpenSSL 3.0, but we also need compatibility for Prisma
+RUN apk add --no-cache openssl libc6-compat
 
 # Install production dependencies only
 COPY package*.json ./
