@@ -67,7 +67,7 @@ class App {
                 },
                 credentials: true,
                 methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-                allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Organization-Id', 'Cookie'],
+                allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Organization-Id', 'X-Tenant-Id', 'Cookie'],
                 exposedHeaders: ['Set-Cookie'],
             }));
         } else {
@@ -76,7 +76,7 @@ class App {
                 origin: true, // Allow all origins in development
                 credentials: true,
                 methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-                allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Organization-Id', 'Cookie'],
+                allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Organization-Id', 'X-Tenant-Id', 'Cookie'],
                 exposedHeaders: ['Set-Cookie'],
             }));
         }
