@@ -114,6 +114,11 @@ class App {
     }
 
     private initializeRoutes(): void {
+        // Root route
+        this.app.get('/', (req, res) => {
+            res.send("Backend is alive 🚀");
+        });
+
         // Health check
         this.app.get('/health', (req, res) => {
             res.status(200).json({
@@ -156,8 +161,9 @@ class App {
             this.initializeErrorHandling();
 
             // Start server
+            // Listen on 0.0.0.0 to accept connections from any interface (required for Railway, Docker, etc.)
             await new Promise<void>((resolve, reject) => {
-                const server = this.app.listen(this.port, () => {
+                const server = this.app.listen(this.port, '0.0.0.0', () => {
                     this.logger.info(`🚀 Backend server running on port ${this.port}`);
                     this.logger.info(`📊 Health check: http://localhost:${this.port}/health`);
                     this.logger.info(`🔗 API base URL: http://localhost:${this.port}/api`);
