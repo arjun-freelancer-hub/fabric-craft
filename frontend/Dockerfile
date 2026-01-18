@@ -48,10 +48,17 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-# Copy standalone output from builder
-# Note: public folder is included in standalone output, so we don't need to copy it separately
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Copy package files and install production dependencies
+COPY --from=builder --chown=nextjs:nodejs /app/package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy built application and static files
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+
+# Copy necessary config files
+COPY --from=builder --chown=nextjs:nodejs /app/next.config.js ./
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
 
 # Switch to non-root user
 USER nextjs
@@ -67,5 +74,5 @@ ENV HOSTNAME="0.0.0.0"
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
-# Start the application
-CMD ["node", "server.js"]
+# Start the application using npm start (requires next in node_modules)
+CMD ["npm", "start"]
