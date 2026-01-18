@@ -5,8 +5,12 @@ frontend/node_modules
 frontend/.next
 
 # Dockerfiles (for Railway - use buildpack instead)
-backend/Dockerfile
-frontend/Dockerfile
+# Renamed to Dockerfile.dev to prevent Railway from auto-detecting them
+backend/Dockerfile.dev
+frontend/Dockerfile.dev
+
+# Docker Compose (for local development only - Railway doesn't need it)
+docker-compose.yml
 
 # Logs
 *.log
