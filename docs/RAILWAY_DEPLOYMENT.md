@@ -37,7 +37,7 @@ Railway will deploy your application as four separate services:
 
 Railway automatically:
 - Detects Node.js projects
-- Builds Docker containers (or uses Nixpacks)
+- Uses Nixpacks to build your application
 - Manages internal networking between services
 - Provides HTTPS certificates
 - Handles scaling and restarts
@@ -92,12 +92,17 @@ Railway automatically:
 
 ### 5.2 Configure Build Settings
 
-Railway will automatically detect your Dockerfile. If you want to customize:
+Railway will automatically detect Node.js projects. Configure build settings:
 
 1. Go to **Settings** → **Build**
-2. **Build Command**: Leave empty (Dockerfile handles this)
-3. **Start Command**: Leave empty (Dockerfile CMD handles this)
+2. **Build Command**: `npx prisma generate && npm run build`
+3. **Start Command**: `npm start`
 4. **Root Directory**: `backend`
+
+**Build Process:**
+- `npx prisma generate` - Generates Prisma Client from schema
+- `npm run build` - Compiles TypeScript to JavaScript (`tsc`)
+- `npm start` - Runs the compiled application (`node dist/index.js`)
 
 ### 5.3 Configure Environment Variables
 
@@ -181,9 +186,10 @@ SMTP_PASS=your_app_password
 ### 5.5 Deploy
 
 Railway will automatically:
-- Build your Docker image using the `backend/Dockerfile`
-- Deploy the container
-- Run the application
+- Install dependencies (`npm install`)
+- Generate Prisma Client (`npx prisma generate`)
+- Build TypeScript (`npm run build`)
+- Start the application (`npm start`)
 
 Check the **"Deployments"** tab to see build logs and deployment status.
 
@@ -294,12 +300,12 @@ npm run db:seed
 ### Option 3: Using Service Command
 
 1. Go to backend service → **Settings** → **Deploy**
-2. Under **"Run Command"**, temporarily add:
+2. Under **"Start Command"**, temporarily change to:
 ```
-npx prisma migrate deploy && npm run db:seed && node -r module-alias/register dist/index.js
+npx prisma migrate deploy && npm run db:seed && npm start
 ```
 3. Redeploy the service
-4. After successful migration, remove the migration commands
+4. After successful migration, change back to: `npm start`
 
 ## Step 8: Configure Custom Domains
 
@@ -352,8 +358,9 @@ Redeploy both services after updating.
 **Common Issues:**
 - Missing environment variables
 - Database connection issues (check DB credentials)
-- Prisma client not generated (should happen in Dockerfile)
-- Port conflicts (ensure PORT=5001 matches Dockerfile EXPOSE)
+- Prisma client not generated (ensure `npx prisma generate` is in build command)
+- Port conflicts (ensure PORT=5001 is set correctly)
+- Build command failing (check that `npm run build` completes successfully)
 
 ### Frontend Build Fails
 
@@ -450,12 +457,18 @@ Railway's filesystem is ephemeral, meaning:
 
 ### Build Process
 
-Railway builds your application using:
-1. Dockerfile (if present) - Used for backend/frontend
-2. Nixpacks (if no Dockerfile) - Auto-detects and builds
+Railway builds your application using Nixpacks, which auto-detects Node.js projects.
 
-**Backend:** Uses `backend/Dockerfile` (multi-stage build)
-**Frontend:** Uses `frontend/Dockerfile` (multi-stage build)
+**Backend Build Steps:**
+1. Install dependencies: `npm install`
+2. Generate Prisma Client: `npx prisma generate` (in build command)
+3. Build TypeScript: `npm run build` (compiles to `dist/` folder)
+4. Start application: `npm start` (runs `node dist/index.js`)
+
+**Frontend Build Steps:**
+1. Install dependencies: `npm install`
+2. Build Next.js: `npm run build` (creates optimized production build)
+3. Start application: `npm start` (runs Next.js production server)
 
 ### Environment Variables
 
