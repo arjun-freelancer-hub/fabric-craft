@@ -93,6 +93,13 @@ export const SETTINGS_ROUTES = {
     GENERATE_SAMPLE_INVOICE: '/settings/business/generate-sample-invoice',
 } as const;
 
+// Report Routes
+export const REPORT_ROUTES = {
+    DASHBOARD: '/reports/dashboard',
+    SALES: '/reports/sales',
+    PRODUCT_PERFORMANCE: '/reports/products/performance',
+} as const;
+
 // Export all routes as a single object for convenience
 export const ROUTES = {
     AUTH: AUTH_ROUTES,
@@ -102,4 +109,5 @@ export const ROUTES = {
     WORKSPACES: WORKSPACE_ROUTES,
     USERS: USER_ROUTES,
     SETTINGS: SETTINGS_ROUTES,
+    REPORTS: REPORT_ROUTES,
 } as const;

@@ -634,4 +634,15 @@ export const settingsApi = {
     },
 };
 
+// Report API
+export const reportApi = {
+    getDashboardOverview: async (params?: {
+        dateFrom?: string;
+        dateTo?: string;
+    }): Promise<ApiResponse<{ dashboard: any }>> => {
+        const response = await api.get(ROUTES.REPORTS.DASHBOARD, { params });
+        return response.data;
+    },
+};
+
 export default api;

@@ -58,21 +58,29 @@
 
         --radius: 0.75rem;
 
-        --sidebar-background: 0 0% 98%;
+        /* Dark sidebar for new design - matching image */
+        --sidebar-background: 217 33% 17%;
+        --sidebar-foreground: 210 40% 98%;
 
-        --sidebar-foreground: 240 5.3% 26.1%;
+        --sidebar-primary: 217 91% 60%;
 
-        --sidebar-primary: 240 5.9% 10%;
+        --sidebar-primary-foreground: 0 0% 100%;
 
-        --sidebar-primary-foreground: 0 0% 98%;
+        --sidebar-accent: 217 33% 25%;
+        --sidebar-accent-foreground: 210 40% 98%;
 
-        --sidebar-accent: 240 4.8% 95.9%;
-
-        --sidebar-accent-foreground: 240 5.9% 10%;
-
-        --sidebar-border: 220 13% 91%;
+        --sidebar-border: 217 33% 25%;
 
         --sidebar-ring: 217.2 91.2% 59.8%;
+
+        /* Content area background - light grey */
+        --content-background: 210 40% 96%;
+
+        /* Metric card colors */
+        --metric-blue: 217 91% 60%;
+        --metric-purple: 262 83% 58%;
+        --metric-orange: 25 95% 53%;
+        --metric-green: 142 76% 36%;
     }
 
     .dark {
@@ -278,5 +286,27 @@
         .print-break {
             page-break-before: always;
         }
+    }
+
+    /* Dashboard content area styling */
+    .dashboard-content {
+        @apply bg-[#f1f5f9] min-h-screen;
+    }
+
+    /* Metric card styles */
+    .metric-card-blue {
+        @apply bg-blue-500 text-white;
+    }
+
+    .metric-card-purple {
+        @apply bg-purple-500 text-white;
+    }
+
+    .metric-card-orange {
+        @apply bg-orange-500 text-white;
+    }
+
+    .metric-card-green {
+        @apply bg-green-500 text-white;
     }
 }
