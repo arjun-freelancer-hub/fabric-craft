@@ -10,6 +10,11 @@ export const metadata: Metadata = {
     description: 'Complete billing and inventory management system for clothing stores with POS, customer management, and measurement tracking',
     keywords: ['billing', 'inventory', 'clothing', 'store', 'management', 'POS', 'tailoring', 'fabric'],
     authors: [{ name: 'FabricCraft Billing System' }],
+    manifest: '/manifest.json',
+    icons: {
+        icon: '/favicon.svg',
+        apple: '/favicon.svg',
+    },
 };
 
 export const viewport = {
