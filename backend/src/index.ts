@@ -13,8 +13,8 @@ import { ErrorHandler } from '@/middleware/ErrorHandler';
 import { Logger } from '@/utils/Logger';
 import { AppRoutes } from '@/routes/AppRoutes';
 
-// Load environment variables
-dotenv.config();
+// Load environment variables (don't override existing vars from Docker, etc.)
+dotenv.config({ override: false });
 
 class App {
     private app: express.Application;
@@ -45,31 +45,41 @@ class App {
         }));
 
         // CORS configuration
-        // In Docker, allow frontend service URL; in development, allow localhost
-        const allowedOrigins = process.env.NODE_ENV === 'production'
-            ? [
+        // In development mode, allow all origins for easier debugging
+        if (process.env.NODE_ENV === 'production') {
+            // Production: only allow specific origins
+            const allowedOrigins = [
                 process.env.FRONTEND_URL,
                 'http://frontend:3000',
                 'http://localhost:3000'
-            ].filter(Boolean) as string[]
-            : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173'];
+            ].filter(Boolean) as string[];
 
-        this.app.use(cors({
-            origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-                // Allow requests with no origin (like mobile apps or curl requests)
-                if (!origin) return callback(null, true);
+            this.app.use(cors({
+                origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+                    // Allow requests with no origin (like mobile apps or curl requests)
+                    if (!origin) return callback(null, true);
 
-                if (allowedOrigins.includes(origin) || allowedOrigins.some(allowed => origin?.includes(allowed))) {
-                    callback(null, true);
-                } else {
-                    callback(new Error('Not allowed by CORS'));
-                }
-            },
-            credentials: true,
-            methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Organization-Id', 'Cookie'],
-            exposedHeaders: ['Set-Cookie'],
-        }));
+                    if (allowedOrigins.includes(origin) || allowedOrigins.some(allowed => origin?.includes(allowed))) {
+                        callback(null, true);
+                    } else {
+                        callback(new Error('Not allowed by CORS'));
+                    }
+                },
+                credentials: true,
+                methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+                allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Organization-Id', 'Cookie'],
+                exposedHeaders: ['Set-Cookie'],
+            }));
+        } else {
+            // Development: allow all origins
+            this.app.use(cors({
+                origin: true, // Allow all origins in development
+                credentials: true,
+                methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+                allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'X-Organization-Id', 'Cookie'],
+                exposedHeaders: ['Set-Cookie'],
+            }));
+        }
 
         // Rate limiting
         const limiter = rateLimit({

@@ -10,9 +10,10 @@ if ! docker-compose ps | grep -q "fabric-craft-backend.*Up"; then
     exit 1
 fi
 
-# Run the seed command using the helper script which constructs DATABASE_URL correctly
-# The helper script ensures DATABASE_URL uses the Docker service name (mysql) instead of localhost
-docker-compose exec -T backend /usr/local/bin/seed-helper.sh
+# Run the seed command directly with proper DATABASE_URL construction
+# The DATABASE_URL is already set in docker-compose.yml environment variables
+# Construct DATABASE_URL from environment variables for this execution
+docker-compose exec -T backend sh -c 'export DATABASE_URL="mysql://${DB_USER:-root}:${DB_PASSWORD:-rootpassword}@${DB_HOST:-mysql}:${DB_PORT:-3306}/${DB_NAME:-clothing_store}" && npx ts-node -r tsconfig-paths/register prisma/seed.ts'
 
 if [ $? -eq 0 ]; then
     echo ""

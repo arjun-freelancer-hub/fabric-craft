@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime/library';
 
 export interface AppError extends Error {
     statusCode?: number;
@@ -34,12 +35,12 @@ export class ErrorHandler {
         ErrorHandler.logError(error, req);
 
         // Handle specific error types
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             const prismaError = ErrorHandler.handlePrismaError(error);
             statusCode = prismaError.statusCode;
             message = prismaError.message;
             isOperational = true;
-        } else if (error instanceof Prisma.PrismaClientValidationError) {
+        } else if (error instanceof PrismaClientValidationError) {
             statusCode = 400;
             message = 'Invalid data provided';
             isOperational = true;
@@ -85,7 +86,7 @@ export class ErrorHandler {
         res.status(statusCode).json(errorResponse);
     }
 
-    private static handlePrismaError(error: Prisma.PrismaClientKnownRequestError): {
+    private static handlePrismaError(error: PrismaClientKnownRequestError): {
         statusCode: number;
         message: string;
     } {

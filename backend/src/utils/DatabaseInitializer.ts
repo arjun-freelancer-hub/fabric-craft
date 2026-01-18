@@ -2,7 +2,8 @@ import mysql from 'mysql2/promise';
 import { Logger } from '@/utils/Logger';
 import dotenv from 'dotenv';
 
-dotenv.config();
+// Load .env file, but don't override existing environment variables (from Docker, etc.)
+dotenv.config({ override: false });
 
 export class DatabaseInitializer {
     private logger: Logger;

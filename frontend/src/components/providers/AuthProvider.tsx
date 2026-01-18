@@ -57,32 +57,39 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const urlParams = new URLSearchParams(window.location.search);
             const redirectTo = urlParams.get('redirect') || '/dashboard';
             
-            // Call the login route handler
-            const response = await fetch(`/api/auth/login?redirect=${encodeURIComponent(redirectTo)}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
+            // Call backend API directly
+            const response = await authApi.login(email, password);
 
-            // Check if we got an error response
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({ message: 'Login failed' }));
-                throw new Error(errorData.message || 'Login failed');
+            if (!response.success) {
+                throw new Error(response.message || 'Login failed');
             }
 
-            // If response is a redirect (status 307/308), the route handler set cookies and wants to redirect
-            // Update auth state from cookies and navigate
+            // Update auth state from localStorage
             const newAuthState = authUtils.getAuthState();
             setAuthState(newAuthState);
 
-            // Navigate to the redirect URL (server-side redirect will happen, but we also navigate client-side)
-            // Use window.location for a full page reload to ensure cookies are available to proxy
-            window.location.href = redirectTo;
+            // Set workspaces in Redux if available
+            const workspaces = (response.data as any).workspaces;
+            if (workspaces) {
+                dispatch(setWorkspaces(workspaces));
+            }
+
+            // Navigate to the redirect URL
+            router.push(redirectTo);
         } catch (error: any) {
             console.error('Login error:', error);
-            throw new Error(error.message || 'Login failed');
+            
+            // Extract error message from various error formats
+            let errorMessage = 'Login failed';
+            if (error.response?.data?.message) {
+                errorMessage = error.response.data.message;
+            } else if (error.response?.data?.error?.message) {
+                errorMessage = error.response.data.error.message;
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
+            
+            throw new Error(errorMessage);
         } finally {
             setIsLoading(false);
         }

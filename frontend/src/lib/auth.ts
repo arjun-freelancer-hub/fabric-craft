@@ -1,5 +1,6 @@
 const AUTH_TOKEN_KEY = 'authToken';
 const USER_DATA_KEY = 'userData';
+const REFRESH_TOKEN_KEY = 'refreshToken';
 
 export interface User {
   id: string;
@@ -26,6 +27,29 @@ function getCookie(name: string): string | null {
     return parts.pop()?.split(';').shift() || null;
   }
   return null;
+}
+
+// Helper function to set cookie (client-side only)
+// Note: Cookies set from client-side cannot be httpOnly, but they can be read by proxy/server
+function setCookie(name: string, value: string, days: number = 7): void {
+  if (typeof window === 'undefined') return;
+  
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  
+  const isProduction = process.env.NODE_ENV === 'production';
+  const sameSite = isProduction ? 'Strict' : 'Lax';
+  
+  // Set cookie with proper attributes for proxy access
+  // SameSite=Lax/Strict allows cookies to be sent in cross-site requests (for proxy)
+  // Secure flag only in production (HTTPS)
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires.toUTCString()}; path=/; SameSite=${sameSite}${isProduction ? '; Secure' : ''}`;
+}
+
+// Helper function to delete cookie (client-side only)
+function deleteCookie(name: string): void {
+  if (typeof window === 'undefined') return;
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; SameSite=Lax`;
 }
 
 // Server-side cookie utilities using Next.js cookies API
@@ -79,25 +103,64 @@ export const serverAuthUtils = {
 };
 
 export const authUtils = {
-  // Note: setAuth() removed - cookies are now set server-side via route handlers
-  // Use the login route handler at /api/auth/login to set cookies
-
-  // Get authentication token (client-side only)
-  getToken: (): string | null => {
-    if (typeof window === 'undefined') return null;
-    return getCookie(AUTH_TOKEN_KEY);
+  // Set authentication data (stores in cookies for proxy access)
+  setAuth: (token: string, user: User, refreshToken?: string): void => {
+    if (typeof window === 'undefined') return;
+    
+    try {
+      // Store token in cookie (readable by proxy/server)
+      setCookie(AUTH_TOKEN_KEY, token, 7); // 7 days
+      
+      // Store user data in cookie (readable by proxy/server)
+      setCookie(USER_DATA_KEY, JSON.stringify(user), 7);
+      
+      // Store refresh token if provided
+      if (refreshToken) {
+        setCookie(REFRESH_TOKEN_KEY, refreshToken, 30); // 30 days for refresh token
+      }
+    } catch (error) {
+      console.error('Error saving auth data to cookies:', error);
+    }
   },
 
-  // Get user data (client-side only)
+  // Get authentication token from cookies (readable by proxy)
+  getToken: (): string | null => {
+    if (typeof window === 'undefined') return null;
+    
+    // Read from cookies (for proxy access)
+    const token = getCookie(AUTH_TOKEN_KEY);
+    if (token) {
+      return decodeURIComponent(token);
+    }
+    
+    return null;
+  },
+
+  // Get user data from cookies (readable by proxy)
   getUser: (): User | null => {
     if (typeof window === 'undefined') return null;
-    const userData = getCookie(USER_DATA_KEY);
-    if (!userData) return null;
+    
+    const cookieUserData = getCookie(USER_DATA_KEY);
+    if (!cookieUserData) return null;
+    
     try {
-      return JSON.parse(decodeURIComponent(userData));
-    } catch {
+      return JSON.parse(decodeURIComponent(cookieUserData));
+    } catch (error) {
+      console.error('Error parsing user data from cookie:', error);
       return null;
     }
+  },
+
+  // Get refresh token from cookies (readable by proxy)
+  getRefreshToken: (): string | null => {
+    if (typeof window === 'undefined') return null;
+    
+    const refreshToken = getCookie(REFRESH_TOKEN_KEY);
+    if (refreshToken) {
+      return decodeURIComponent(refreshToken);
+    }
+    
+    return null;
   },
 
   // Get current auth state (client-side only)
@@ -113,12 +176,22 @@ export const authUtils = {
   },
 
   // Clear authentication data (client-side only)
-  // Note: For proper logout, use the logout API endpoint which clears cookies server-side
   clearAuth: () => {
     if (typeof window === 'undefined') return;
-    // Clear cookies by setting them to expire
-    document.cookie = `${AUTH_TOKEN_KEY}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-    document.cookie = `${USER_DATA_KEY}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    
+    // Clear cookies
+    deleteCookie(AUTH_TOKEN_KEY);
+    deleteCookie(USER_DATA_KEY);
+    deleteCookie(REFRESH_TOKEN_KEY);
+    
+    // Also clear localStorage if it exists (for backward compatibility during migration)
+    try {
+      localStorage.removeItem(AUTH_TOKEN_KEY);
+      localStorage.removeItem(USER_DATA_KEY);
+      localStorage.removeItem(REFRESH_TOKEN_KEY);
+    } catch (error) {
+      // Ignore localStorage errors
+    }
   },
 
   // Check if user has specific role

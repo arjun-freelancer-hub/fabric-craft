@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { authUtils } from './auth';
-
-// API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+import { API_BASE_URL, ROUTES } from './routeUrls';
 
 // Create axios instance
 const api = axios.create({
@@ -13,6 +11,12 @@ const api = axios.create({
     },
     withCredentials: true, // Enable cookies for cross-origin requests
 });
+
+// Log the configured API base URL in development
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+    console.log('🔗 API Base URL configured:', API_BASE_URL);
+    console.log('🔗 Full Login URL will be:', API_BASE_URL + '/auth/login');
+}
 
 // Request interceptor to add auth token and workspace context
 api.interceptors.request.use(
@@ -218,32 +222,32 @@ export const productApi = {
         page?: number;
         limit?: number;
     }): Promise<PaginatedResponse<Product>> => {
-        const response = await api.get('/products', { params });
+        const response = await api.get(ROUTES.PRODUCTS.LIST, { params });
         return response.data;
     },
 
     getProductById: async (id: string): Promise<ApiResponse<{ product: Product }>> => {
-        const response = await api.get(`/products/${id}`);
+        const response = await api.get(ROUTES.PRODUCTS.BY_ID(id));
         return response.data;
     },
 
     getProductByBarcode: async (barcode: string): Promise<ApiResponse<{ product: Product }>> => {
-        const response = await api.get(`/products/barcode/${barcode}`);
+        const response = await api.get(ROUTES.PRODUCTS.BY_BARCODE(barcode));
         return response.data;
     },
 
     createProduct: async (productData: Partial<Product>): Promise<ApiResponse<{ product: Product }>> => {
-        const response = await api.post('/products', productData);
+        const response = await api.post(ROUTES.PRODUCTS.CREATE, productData);
         return response.data;
     },
 
     updateProduct: async (id: string, productData: Partial<Product>): Promise<ApiResponse<{ product: Product }>> => {
-        const response = await api.put(`/products/${id}`, productData);
+        const response = await api.put(ROUTES.PRODUCTS.UPDATE(id), productData);
         return response.data;
     },
 
     deleteProduct: async (id: string): Promise<ApiResponse<null>> => {
-        const response = await api.delete(`/products/${id}`);
+        const response = await api.delete(ROUTES.PRODUCTS.DELETE(id));
         return response.data;
     },
 
@@ -252,7 +256,7 @@ export const productApi = {
         type?: string;
         limit?: number;
     }): Promise<ApiResponse<{ products: Product[] }>> => {
-        const response = await api.get(`/products/search/${query}`, { params: filters });
+        const response = await api.get(ROUTES.PRODUCTS.SEARCH(query), { params: filters });
         return response.data;
     },
 };
@@ -265,52 +269,52 @@ export const customerApi = {
         page?: number;
         limit?: number;
     }): Promise<PaginatedResponse<Customer>> => {
-        const response = await api.get('/customers', { params });
+        const response = await api.get(ROUTES.CUSTOMERS.LIST, { params });
         return response.data;
     },
 
     getCustomerById: async (id: string): Promise<ApiResponse<{ customer: Customer }>> => {
-        const response = await api.get(`/customers/${id}`);
+        const response = await api.get(ROUTES.CUSTOMERS.BY_ID(id));
         return response.data;
     },
 
     createCustomer: async (customerData: Partial<Customer>): Promise<ApiResponse<{ customer: Customer }>> => {
-        const response = await api.post('/customers', customerData);
+        const response = await api.post(ROUTES.CUSTOMERS.CREATE, customerData);
         return response.data;
     },
 
     updateCustomer: async (id: string, customerData: Partial<Customer>): Promise<ApiResponse<{ customer: Customer }>> => {
-        const response = await api.put(`/customers/${id}`, customerData);
+        const response = await api.put(ROUTES.CUSTOMERS.UPDATE(id), customerData);
         return response.data;
     },
 
     deleteCustomer: async (id: string): Promise<ApiResponse<null>> => {
-        const response = await api.delete(`/customers/${id}`);
+        const response = await api.delete(ROUTES.CUSTOMERS.DELETE(id));
         return response.data;
     },
 
     getCustomerMeasurements: async (id: string): Promise<ApiResponse<{ measurements: CustomerMeasurement[] }>> => {
-        const response = await api.get(`/customers/${id}/measurements`);
+        const response = await api.get(ROUTES.CUSTOMERS.MEASUREMENTS(id));
         return response.data;
     },
 
     addCustomerMeasurement: async (id: string, measurementData: Partial<CustomerMeasurement>): Promise<ApiResponse<{ measurement: CustomerMeasurement }>> => {
-        const response = await api.post(`/customers/${id}/measurements`, measurementData);
+        const response = await api.post(ROUTES.CUSTOMERS.ADD_MEASUREMENT(id), measurementData);
         return response.data;
     },
 
     updateCustomerMeasurement: async (customerId: string, measurementId: string, measurementData: Partial<CustomerMeasurement>): Promise<ApiResponse<{ measurement: CustomerMeasurement }>> => {
-        const response = await api.put(`/customers/${customerId}/measurements/${measurementId}`, measurementData);
+        const response = await api.put(ROUTES.CUSTOMERS.UPDATE_MEASUREMENT(customerId, measurementId), measurementData);
         return response.data;
     },
 
     deleteCustomerMeasurement: async (customerId: string, measurementId: string): Promise<ApiResponse<null>> => {
-        const response = await api.delete(`/customers/${customerId}/measurements/${measurementId}`);
+        const response = await api.delete(ROUTES.CUSTOMERS.DELETE_MEASUREMENT(customerId, measurementId));
         return response.data;
     },
 
     searchCustomers: async (query: string, limit: number = 10): Promise<ApiResponse<{ customers: Customer[] }>> => {
-        const response = await api.get(`/customers/search/${encodeURIComponent(query)}`, {
+        const response = await api.get(ROUTES.CUSTOMERS.SEARCH(query), {
             params: { limit }
         });
         return response.data;
@@ -328,32 +332,32 @@ export const billApi = {
         page?: number;
         limit?: number;
     }): Promise<PaginatedResponse<Bill>> => {
-        const response = await api.get('/bills', { params });
+        const response = await api.get(ROUTES.BILLS.LIST, { params });
         return response.data;
     },
 
     getBillById: async (id: string): Promise<ApiResponse<{ bill: Bill }>> => {
-        const response = await api.get(`/bills/${id}`);
+        const response = await api.get(ROUTES.BILLS.BY_ID(id));
         return response.data;
     },
 
     createBill: async (billData: CreateBillData): Promise<ApiResponse<{ bill: Bill }>> => {
-        const response = await api.post('/bills', billData);
+        const response = await api.post(ROUTES.BILLS.CREATE, billData);
         return response.data;
     },
 
     updateBill: async (id: string, billData: Partial<Bill>): Promise<ApiResponse<{ bill: Bill }>> => {
-        const response = await api.put(`/bills/${id}`, billData);
+        const response = await api.put(ROUTES.BILLS.UPDATE(id), billData);
         return response.data;
     },
 
     cancelBill: async (id: string, reason: string): Promise<ApiResponse<{ bill: Bill }>> => {
-        const response = await api.patch(`/bills/${id}/cancel`, { reason });
+        const response = await api.patch(ROUTES.BILLS.CANCEL(id), { reason });
         return response.data;
     },
 
     generateInvoice: async (id: string, format: 'pdf' | 'html' = 'pdf'): Promise<Blob> => {
-        const response = await api.get(`/bills/${id}/invoice`, {
+        const response = await api.get(ROUTES.BILLS.INVOICE(id), {
             params: { format },
             responseType: 'blob'
         });
@@ -361,7 +365,7 @@ export const billApi = {
     },
 
     sendInvoiceWhatsApp: async (id: string, phoneNumber: string, message?: string): Promise<ApiResponse<{ method: string; whatsappUrl?: string }>> => {
-        const response = await api.post(`/bills/${id}/send-whatsapp`, { phoneNumber, message });
+        const response = await api.post(ROUTES.BILLS.SEND_WHATSAPP(id), { phoneNumber, message });
         return response.data;
     },
 
@@ -370,18 +374,32 @@ export const billApi = {
         method: string;
         notes?: string;
     }): Promise<ApiResponse<{ payment: any }>> => {
-        const response = await api.post(`/bills/${id}/payments`, paymentData);
+        const response = await api.post(ROUTES.BILLS.PAYMENTS(id), paymentData);
         return response.data;
     },
 };
 
 // Auth API
 export const authApi = {
-    // Note: login() is deprecated - use the route handler at /api/auth/login instead
-    // This method is kept for backward compatibility but does not set cookies
-    login: async (email: string, password: string): Promise<ApiResponse<{ token: string; user: any }>> => {
-        const response = await api.post('/auth/login', { email, password });
-        // Cookies are now set server-side via route handler
+    // Login - calls backend API directly and stores token in cookies (readable by proxy)
+    login: async (email: string, password: string): Promise<ApiResponse<{ user: any; tokens: { accessToken: string; refreshToken: string }; workspaces: any[] }>> => {
+        // Log the actual URL being used for debugging
+        if (typeof window !== 'undefined') {
+            console.log('Login API URL:', API_BASE_URL + ROUTES.AUTH.LOGIN);
+        }
+        const response = await api.post(ROUTES.AUTH.LOGIN, { email, password });
+        
+        // Store token and user data in cookies (readable by proxy for protected routes)
+        if (response.data.success && response.data.data) {
+            const { user, tokens, workspaces } = response.data.data;
+            authUtils.setAuth(tokens.accessToken, user, tokens.refreshToken);
+            
+            // Set default workspace in localStorage (client-side only state)
+            if (workspaces && workspaces.length > 0 && typeof window !== 'undefined') {
+                localStorage.setItem('currentWorkspaceId', workspaces[0].id);
+            }
+        }
+        
         return response.data;
     },
 
@@ -392,13 +410,20 @@ export const authApi = {
         username: string;
         password: string;
         organizationName?: string;
-    }): Promise<ApiResponse<{ user: any; workspaces: any[] }>> => {
-        const response = await api.post('/auth/register', userData);
-        // Cookies should be set server-side via route handler
-        // Set default workspace if available
-        const { workspaces } = response.data.data;
-        if (workspaces && workspaces.length > 0 && typeof window !== 'undefined') {
-            localStorage.setItem('currentWorkspaceId', workspaces[0].id);
+    }): Promise<ApiResponse<{ user: any; workspaces: any[]; tokens?: { accessToken: string; refreshToken: string } }>> => {
+        const response = await api.post(ROUTES.AUTH.REGISTER, userData);
+        
+        // Store token and user data in cookies if available (readable by proxy)
+        if (response.data.success && response.data.data) {
+            const { user, tokens, workspaces } = response.data.data;
+            if (tokens && user) {
+                authUtils.setAuth(tokens.accessToken, user, tokens.refreshToken);
+            }
+            
+            // Set default workspace in localStorage (client-side only state)
+            if (workspaces && workspaces.length > 0 && typeof window !== 'undefined') {
+                localStorage.setItem('currentWorkspaceId', workspaces[0].id);
+            }
         }
 
         return response.data;
@@ -410,46 +435,53 @@ export const authApi = {
         lastName?: string;
         username?: string;
         password?: string;
-    }): Promise<ApiResponse<{ user: any; workspaces: any[] }>> => {
-        const response = await api.post('/auth/accept-invitation', invitationData);
-        // Cookies should be set server-side via route handler
-        // Set default workspace if available
-        const { workspaces } = response.data.data;
-        if (workspaces && workspaces.length > 0 && typeof window !== 'undefined') {
-            localStorage.setItem('currentWorkspaceId', workspaces[0].id);
+    }): Promise<ApiResponse<{ user: any; workspaces: any[]; tokens?: { accessToken: string; refreshToken: string } }>> => {
+        const response = await api.post(ROUTES.AUTH.ACCEPT_INVITATION, invitationData);
+        
+        // Store token and user data in cookies if available (readable by proxy)
+        if (response.data.success && response.data.data) {
+            const { user, tokens, workspaces } = response.data.data;
+            if (tokens && user) {
+                authUtils.setAuth(tokens.accessToken, user, tokens.refreshToken);
+            }
+            
+            // Set default workspace in localStorage (client-side only state)
+            if (workspaces && workspaces.length > 0 && typeof window !== 'undefined') {
+                localStorage.setItem('currentWorkspaceId', workspaces[0].id);
+            }
         }
 
         return response.data;
     },
 
     verifyInvitation: async (token: string): Promise<ApiResponse<{ invitation: { email: string; role: string; expiresAt: string } }>> => {
-        const response = await api.get(`/auth/invite/verify/${token}`);
+        const response = await api.get(ROUTES.AUTH.VERIFY_INVITATION(token));
         return response.data;
     },
 
     forgotPassword: async (email: string): Promise<ApiResponse<any>> => {
-        const response = await api.post('/auth/forgot-password', { email });
+        const response = await api.post(ROUTES.AUTH.FORGOT_PASSWORD, { email });
         return response.data;
     },
 
     resetPassword: async (token: string, newPassword: string): Promise<ApiResponse<null>> => {
-        const response = await api.post('/auth/reset-password', { token, newPassword });
+        const response = await api.post(ROUTES.AUTH.RESET_PASSWORD, { token, newPassword });
         return response.data;
     },
 
     verifyResetToken: async (token: string): Promise<ApiResponse<null>> => {
-        const response = await api.get(`/auth/reset-password/verify/${token}`);
+        const response = await api.get(ROUTES.AUTH.VERIFY_RESET_TOKEN(token));
         return response.data;
     },
 
     changePassword: async (currentPassword: string, newPassword: string): Promise<ApiResponse<null>> => {
-        const response = await api.post('/auth/change-password', { currentPassword, newPassword });
+        const response = await api.post(ROUTES.AUTH.CHANGE_PASSWORD, { currentPassword, newPassword });
         return response.data;
     },
 
     logout: async (): Promise<ApiResponse<null>> => {
         try {
-            await api.post('/auth/logout');
+            await api.post(ROUTES.AUTH.LOGOUT);
         } catch (error) {
             // Even if the API call fails, clear local auth data
             console.error('Logout API call failed:', error);
@@ -462,12 +494,12 @@ export const authApi = {
     },
 
     getProfile: async (): Promise<ApiResponse<{ user: any }>> => {
-        const response = await api.get('/auth/profile');
+        const response = await api.get(ROUTES.AUTH.PROFILE);
         return response.data;
     },
 
     refreshToken: async (): Promise<ApiResponse<{ token: string }>> => {
-        const response = await api.post('/auth/refresh');
+        const response = await api.post(ROUTES.AUTH.REFRESH_TOKEN);
         // Token refresh should be handled server-side via route handler
         return response.data;
     },
@@ -476,62 +508,62 @@ export const authApi = {
 // Workspace Management API
 export const workspaceApi = {
     getWorkspaces: async (): Promise<ApiResponse<{ workspaces: any[] }>> => {
-        const response = await api.get('/workspaces');
+        const response = await api.get(ROUTES.WORKSPACES.LIST);
         return response.data;
     },
 
     createWorkspace: async (name: string, description?: string): Promise<ApiResponse<{ workspace: any }>> => {
-        const response = await api.post('/workspaces', { name, description });
+        const response = await api.post(ROUTES.WORKSPACES.CREATE, { name, description });
         return response.data;
     },
 
     getWorkspace: async (workspaceId: string): Promise<ApiResponse<{ workspace: any }>> => {
-        const response = await api.get(`/workspaces/${workspaceId}`);
+        const response = await api.get(ROUTES.WORKSPACES.BY_ID(workspaceId));
         return response.data;
     },
 
     updateWorkspace: async (workspaceId: string, data: { name?: string; description?: string }): Promise<ApiResponse<{ workspace: any }>> => {
-        const response = await api.patch(`/workspaces/${workspaceId}`, data);
+        const response = await api.patch(ROUTES.WORKSPACES.UPDATE(workspaceId), data);
         return response.data;
     },
 
     deleteWorkspace: async (workspaceId: string): Promise<ApiResponse<null>> => {
-        const response = await api.delete(`/workspaces/${workspaceId}`);
+        const response = await api.delete(ROUTES.WORKSPACES.DELETE(workspaceId));
         return response.data;
     },
 
     getMembers: async (workspaceId: string): Promise<ApiResponse<{ members: any[]; count: number }>> => {
-        const response = await api.get(`/workspaces/${workspaceId}/members`);
+        const response = await api.get(ROUTES.WORKSPACES.MEMBERS(workspaceId));
         return response.data;
     },
 
     inviteMember: async (workspaceId: string, email: string, role: 'ADMIN' | 'MEMBER' = 'MEMBER'): Promise<ApiResponse<{ invitation: any; invitationLink?: string }>> => {
-        const response = await api.post(`/workspaces/${workspaceId}/invite`, { email, role });
+        const response = await api.post(ROUTES.WORKSPACES.INVITE(workspaceId), { email, role });
         return response.data;
     },
 
     updateMemberRole: async (workspaceId: string, userId: string, role: 'OWNER' | 'ADMIN' | 'MEMBER'): Promise<ApiResponse<null>> => {
-        const response = await api.patch(`/workspaces/${workspaceId}/members/${userId}/role`, { role });
+        const response = await api.patch(ROUTES.WORKSPACES.MEMBER_ROLE(workspaceId, userId), { role });
         return response.data;
     },
 
     removeMember: async (workspaceId: string, userId: string): Promise<ApiResponse<null>> => {
-        const response = await api.delete(`/workspaces/${workspaceId}/members/${userId}`);
+        const response = await api.delete(ROUTES.WORKSPACES.REMOVE_MEMBER(workspaceId, userId));
         return response.data;
     },
 
     getInvitations: async (workspaceId: string, status?: string): Promise<ApiResponse<{ invitations: any[] }>> => {
-        const response = await api.get(`/workspaces/${workspaceId}/invitations`, { params: { status } });
+        const response = await api.get(ROUTES.WORKSPACES.INVITATIONS(workspaceId), { params: { status } });
         return response.data;
     },
 
     resendInvitation: async (workspaceId: string, invitationId: string): Promise<ApiResponse<null>> => {
-        const response = await api.post(`/workspaces/${workspaceId}/invitations/${invitationId}/resend`);
+        const response = await api.post(ROUTES.WORKSPACES.RESEND_INVITATION(workspaceId, invitationId));
         return response.data;
     },
 
     cancelInvitation: async (workspaceId: string, invitationId: string): Promise<ApiResponse<null>> => {
-        const response = await api.delete(`/workspaces/${workspaceId}/invitations/${invitationId}`);
+        const response = await api.delete(ROUTES.WORKSPACES.CANCEL_INVITATION(workspaceId, invitationId));
         return response.data;
     },
 };
@@ -544,12 +576,12 @@ export const userApi = {
         page?: number;
         limit?: number;
     }): Promise<PaginatedResponse<any>> => {
-        const response = await api.get('/users', { params });
+        const response = await api.get(ROUTES.USERS.LIST, { params });
         return response.data;
     },
 
     getUserById: async (userId: string): Promise<ApiResponse<{ user: any }>> => {
-        const response = await api.get(`/users/${userId}`);
+        const response = await api.get(ROUTES.USERS.BY_ID(userId));
         return response.data;
     },
 };
@@ -557,7 +589,7 @@ export const userApi = {
 // Settings API
 export const settingsApi = {
     getWhatsAppSettings: async (): Promise<ApiResponse<{ settings: any }>> => {
-        const response = await api.get('/settings/whatsapp');
+        const response = await api.get(ROUTES.SETTINGS.WHATSAPP);
         return response.data;
     },
 
@@ -569,32 +601,32 @@ export const settingsApi = {
         phoneNumberId?: string;
         businessAccountId?: string;
     }): Promise<ApiResponse<{ settings: any }>> => {
-        const response = await api.put('/settings/whatsapp', settings);
+        const response = await api.put(ROUTES.SETTINGS.WHATSAPP, settings);
         return response.data;
     },
 
     testWhatsAppConnection: async (): Promise<ApiResponse<null>> => {
-        const response = await api.post('/settings/whatsapp/test');
+        const response = await api.post(ROUTES.SETTINGS.WHATSAPP_TEST);
         return response.data;
     },
 
     getBusinessSettings: async (): Promise<ApiResponse<{ settings: any }>> => {
-        const response = await api.get('/settings/business/info');
+        const response = await api.get(ROUTES.SETTINGS.BUSINESS_INFO);
         return response.data;
     },
 
     updateBusinessSettings: async (settings: any): Promise<ApiResponse<{ settings: any }>> => {
-        const response = await api.put('/settings/business/info', settings);
+        const response = await api.put(ROUTES.SETTINGS.BUSINESS_INFO, settings);
         return response.data;
     },
 
     uploadLogo: async (logo: string): Promise<ApiResponse<{ logo: string }>> => {
-        const response = await api.post('/settings/business/logo', { logo });
+        const response = await api.post(ROUTES.SETTINGS.BUSINESS_LOGO, { logo });
         return response.data;
     },
 
     generateSampleInvoice: async (billData: any, template: string): Promise<Blob> => {
-        const response = await api.post('/settings/business/generate-sample-invoice',
+        const response = await api.post(ROUTES.SETTINGS.GENERATE_SAMPLE_INVOICE,
             { billData, template },
             { responseType: 'blob' }
         );

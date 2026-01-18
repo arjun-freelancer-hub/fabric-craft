@@ -143,7 +143,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                                                     isActive={activeSection === item.id}
                                                     className={cn(
                                                         "w-full justify-start",
-                                                        activeSection === item.id && "primary-gradient text-white"
+                                                        activeSection === item.id && "primary-gradient !text-white [&>svg]:!text-white [&>span]:!text-white"
                                                     )}
                                                 >
                                                     <Icon className="w-4 h-4 mr-2" />
